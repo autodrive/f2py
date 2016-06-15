@@ -58,7 +58,9 @@ def find_slicot_function_names(r):
 def print_sorted_keys(function_names):
     keys = function_names.keys()
     keys.sort()
-    print(keys)
+    for i, key in enumerate(keys):
+        print(i, key)
+        print(function_names[key])
 
 
 def handle_two_functions_import(function_names, line_strip_split, path, filename, line_number):
@@ -87,7 +89,7 @@ def main():
     # pprint(result)
     function_names = find_slicot_function_names(result)
 
-    pprint(function_names)
+    # pprint(function_names)
     print_sorted_keys(function_names)
 
     os.chdir(current_path)

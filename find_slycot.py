@@ -10,16 +10,16 @@ def pwd():
 def process_file(path, file_name):
     result = []
     if ".py" == os.path.splitext(file_name)[-1]:
-        with open(file_name, 'r') as f:
-            txt = f.read()
-            f.close()
+        f = open(file_name, 'r')
+        txt = f.read()
+        f.close()
 
-            lines = txt.splitlines()
+        lines = txt.splitlines()
 
-            for k, line in enumerate(lines):
-                if "slycot" in line:
-                    # print file_name, k, ':', line
-                    result.append((path, file_name, k, line))
+        for k, line in enumerate(lines):
+            if "slycot" in line:
+                # print file_name, k, ':', line
+                result.append((k, line))
     return result
 
 
@@ -27,10 +27,12 @@ def process_folder(root, files):
     current_path = pwd()
     os.chdir(os.path.abspath(root))
 
-    folder_result = []
+    folder_result = {}
 
     for file_name in files:
-        folder_result.append(process_file(root, file_name))
+        file_result = process_file(root, file_name)
+        if file_result:
+            folder_result[file_name] = file_result
 
     os.chdir(current_path)
 
@@ -40,9 +42,12 @@ def process_folder(root, files):
 def main():
     current_path = pwd()
 
-    result = []
+    result = {}
     for root, dirs, files in os.walk(os.pardir):
-        result.append(process_folder(root, files))
+        if '.git' not in root and '.idea' not in root:
+            folder_list = process_folder(root, files)
+            if folder_list:
+                result[root] = folder_list
 
     pprint(result)
 

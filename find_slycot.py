@@ -42,16 +42,21 @@ def process_folder(root, files):
 def main():
     current_path = pwd()
 
+    result = recursively_find_slycot()
+
+    pprint(result)
+
+    os.chdir(current_path)
+
+
+def recursively_find_slycot():
     result = {}
     for root, dirs, files in os.walk(os.pardir):
         if '.git' not in root and '.idea' not in root and not root.startswith('..\\build'):
             folder_list = process_folder(root, files)
             if folder_list:
                 result[root] = folder_list
-
-    pprint(result)
-
-    os.chdir(current_path)
+    return result
 
 
 if __name__ == '__main__':

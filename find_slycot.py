@@ -50,6 +50,10 @@ def find_slicot_function_names(r):
                     if 4 == len(line_strip_split):
                         key = line_strip_split[-1]
                         add_function_name(key, function_names, path, filename, line_number)
+                    elif 5 == len(line_strip_split):
+                        keys = [line_strip_split[3][:-1], line_strip_split[4]]
+                        for key in keys:
+                            add_function_name(key, function_names, path, filename, line_number)
 
     pprint(function_names)
 

@@ -39,12 +39,31 @@ def process_folder(root, files):
     return folder_result
 
 
+def find_slicot_function_names(r):
+    function_names = {}
+    for path, files in r.items():
+        for filename, lines in files.items():
+            for line_number, line in lines:
+                line_strip = line.strip()
+                if not line_strip.startswith('#'):
+                    line_strip_split = line_strip.split()
+                    if 4 == len(line_strip_split):
+                        key = line_strip_split[-1]
+                        if key in function_names:
+                            function_names[key].append((path, filename, line_number))
+                        else:
+                            function_names[key] = [(path, filename, line_number)]
+
+    pprint(function_names)
+
+
 def main():
     current_path = pwd()
 
     result = recursively_find_slycot()
 
-    pprint(result)
+    # pprint(result)
+    find_slicot_function_names(result)
 
     os.chdir(current_path)
 

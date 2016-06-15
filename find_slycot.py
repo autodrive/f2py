@@ -53,6 +53,13 @@ def find_slicot_function_names(r):
                         handle_two_functions_import(function_names, line_strip_split, path, filename, line_number)
 
     pprint(function_names)
+    print_sorted_keys(function_names)
+
+
+def print_sorted_keys(function_names):
+    keys = function_names.keys()
+    keys.sort()
+    print(keys)
 
 
 def handle_two_functions_import(function_names, line_strip_split, path, filename, line_number):

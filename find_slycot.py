@@ -49,12 +49,16 @@ def find_slicot_function_names(r):
                     line_strip_split = line_strip.split()
                     if 4 == len(line_strip_split):
                         key = line_strip_split[-1]
-                        if key in function_names:
-                            function_names[key].append((path, filename, line_number))
-                        else:
-                            function_names[key] = [(path, filename, line_number)]
+                        add_function_name(key, function_names, path, filename, line_number)
 
     pprint(function_names)
+
+
+def add_function_name(key, function_names, path, filename, line_number):
+    if key in function_names:
+        function_names[key].append((path, filename, line_number))
+    else:
+        function_names[key] = [(path, filename, line_number)]
 
 
 def main():

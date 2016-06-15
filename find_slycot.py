@@ -17,7 +17,7 @@ def process_file(path, file_name):
         lines = txt.splitlines()
 
         for k, line in enumerate(lines):
-            if "slycot" in line:
+            if "from" + " slycot import" in line:
                 # print file_name, k, ':', line
                 result.append((k, line))
     return result

@@ -48,14 +48,22 @@ def find_slicot_function_names(r):
                 if not line_strip.startswith('#'):
                     line_strip_split = line_strip.split()
                     if 4 == len(line_strip_split):
-                        key = line_strip_split[-1]
-                        add_function_name(key, function_names, path, filename, line_number)
+                        handle_one_function_import(function_names, line_strip_split, path, filename, line_number)
                     elif 5 == len(line_strip_split):
-                        keys = [line_strip_split[3][:-1], line_strip_split[4]]
-                        for key in keys:
-                            add_function_name(key, function_names, path, filename, line_number)
+                        handle_two_functions_import(function_names, line_strip_split, path, filename, line_number)
 
     pprint(function_names)
+
+
+def handle_two_functions_import(function_names, line_strip_split, path, filename, line_number):
+    keys = [line_strip_split[3][:-1], line_strip_split[4]]
+    for key in keys:
+        add_function_name(key, function_names, path, filename, line_number)
+
+
+def handle_one_function_import(function_names, line_strip_split, path, filename, line_number):
+    key = line_strip_split[-1]
+    add_function_name(key, function_names, path, filename, line_number)
 
 
 def add_function_name(key, function_names, path, filename, line_number):

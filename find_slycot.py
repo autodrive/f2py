@@ -7,22 +7,6 @@ def pwd():
     return os.path.abspath(os.curdir)
 
 
-def process_file(path, file_name):
-    result = []
-    if ".py" == os.path.splitext(file_name)[-1]:
-        f = open(file_name, 'r')
-        txt = f.read()
-        f.close()
-
-        lines = txt.splitlines()
-
-        for k, line in enumerate(lines):
-            if "from" + " slycot import" in line:
-                # print file_name, k, ':', line
-                result.append((k, line))
-    return result
-
-
 def find_slicot_function_names(r):
     function_names = {}
     for path, files in r.items():
@@ -93,21 +77,37 @@ class RecursiveFinder(object):
                 if folder_list:
                     self.result[root] = folder_list
 
-    @staticmethod
-    def process_folder(root, files):
+    def process_folder(self, root, files):
         current_path = pwd()
         os.chdir(os.path.abspath(root))
 
         folder_result = {}
 
         for file_name in files:
-            file_result = process_file(root, file_name)
+            file_result = self.process_file(root, file_name)
             if file_result:
                 folder_result[file_name] = file_result
 
         os.chdir(current_path)
 
         return folder_result
+
+    def process_file(self, path, file_name):
+        result = []
+        # TODO : extension as an instance variable
+        if ".py" == os.path.splitext(file_name)[-1]:
+            f = open(file_name, 'r')
+            txt = f.read()
+            f.close()
+
+            lines = txt.splitlines()
+
+            for k, line in enumerate(lines):
+                # TODO : pattern as an instance variable
+                if "from" + " slycot import" in line:
+                    # print file_name, k, ':', line
+                    result.append((k, line))
+        return result
 
 
 def main():

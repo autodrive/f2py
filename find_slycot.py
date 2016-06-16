@@ -121,17 +121,20 @@ class RecursiveFinder(object):
         return result
 
 
+class RecursiveFinderFortran(RecursiveFinder):
+    def __init__(self, initial_path=get_first_script_parameter(), extension='.f', pattern="CALL", function_list=False):
+        RecursiveFinder.__init__(self, initial_path=initial_path, extension=extension, pattern=pattern)
+        self.function_list = function_list
+
+
 def main():
     python_finder = RecursiveFinder(os.pardir)
 
     function_names = find_slicot_function_names(python_finder.result)
 
-    # pprint(function_names)
     print_sorted_keys(function_names)
 
-    fortran_finder = RecursiveFinder(initial_path=get_first_script_parameter(),
-                                     extension='.f',
-                                     pattern='CALL')
+    fortran_finder = RecursiveFinderFortran()
 
     pprint(fortran_finder.result, width=240)
 

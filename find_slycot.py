@@ -81,6 +81,16 @@ def add_function_name(key, function_names, path, filename, line_number):
         function_names[key] = [(path, filename, line_number)]
 
 
+def recursively_find_slycot():
+    result = {}
+    for root, dirs, files in os.walk(os.pardir):
+        if '.git' not in root and '.idea' not in root and not root.startswith('..\\build'):
+            folder_list = process_folder(root, files)
+            if folder_list:
+                result[root] = folder_list
+    return result
+
+
 def main():
     current_path = pwd()
 
@@ -93,16 +103,6 @@ def main():
     print_sorted_keys(function_names)
 
     os.chdir(current_path)
-
-
-def recursively_find_slycot():
-    result = {}
-    for root, dirs, files in os.walk(os.pardir):
-        if '.git' not in root and '.idea' not in root and not root.startswith('..\\build'):
-            folder_list = process_folder(root, files)
-            if folder_list:
-                result[root] = folder_list
-    return result
 
 
 if __name__ == '__main__':

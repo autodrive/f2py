@@ -24,7 +24,7 @@ def find_slicot_function_names(r):
 
 
 def print_sorted_keys(function_names):
-    keys = function_names.keys()
+    keys = list(function_names.keys())
     keys.sort()
     for i, key in enumerate(keys):
         print(i, key)

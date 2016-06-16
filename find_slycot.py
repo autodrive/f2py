@@ -50,9 +50,11 @@ def add_function_name(key, function_names, path, filename, line_number):
 
 
 class RecursiveFinder(object):
-    def __init__(self, initial_path=os.curdir):
+    def __init__(self, initial_path=os.curdir, extension='.py', pattern="from" + " slycot import"):
         self.abs_return_path = os.path.abspath(os.curdir)
         abs_initial_path = os.path.abspath(initial_path)
+        self.extension = extension
+        self.pattern = pattern
 
         self.result = {}
 
@@ -94,8 +96,8 @@ class RecursiveFinder(object):
 
     def process_file(self, path, file_name):
         result = []
-        # TODO : extension as an instance variable
-        if ".py" == os.path.splitext(file_name)[-1]:
+
+        if os.path.splitext(file_name)[-1] == self.extension:
             f = open(file_name, 'r')
             txt = f.read()
             f.close()
@@ -103,10 +105,11 @@ class RecursiveFinder(object):
             lines = txt.splitlines()
 
             for k, line in enumerate(lines):
-                # TODO : pattern as an instance variable
-                if "from" + " slycot import" in line:
+
+                if self.pattern in line:
                     # print file_name, k, ':', line
                     result.append((k, line))
+
         return result
 
 

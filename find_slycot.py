@@ -60,7 +60,7 @@ def print_sorted_keys(function_names):
     keys.sort()
     for i, key in enumerate(keys):
         print(i, key)
-        print(function_names[key])
+        pprint(function_names[key])
 
 
 def handle_two_functions_import(function_names, line_strip_split, path, filename, line_number):
@@ -79,16 +79,6 @@ def add_function_name(key, function_names, path, filename, line_number):
         function_names[key].append((path, filename, line_number))
     else:
         function_names[key] = [(path, filename, line_number)]
-
-
-def recursively_find_slycot():
-    result = {}
-    for root, dirs, files in os.walk(os.pardir):
-        if '.git' not in root and '.idea' not in root and not root.startswith('..\\build'):
-            folder_list = process_folder(root, files)
-            if folder_list:
-                result[root] = folder_list
-    return result
 
 
 class RecursiveFinder(object):
@@ -113,6 +103,7 @@ class RecursiveFinder(object):
 
     def walker(self):
         for root, dirs, files in os.walk(self.abs_initial_path):
+            # TODO : list of folders to ignore
             if '.git' not in root and '.idea' not in root and not root.startswith('..\\build'):
                 folder_list = process_folder(root, files)
                 if folder_list:

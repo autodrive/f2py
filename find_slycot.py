@@ -7,6 +7,14 @@ def pwd():
     return os.path.abspath(os.curdir)
 
 
+def get_first_script_parameter():
+    from sys import argv
+    result = os.curdir
+    if 1 < len(argv):
+        result = argv[1]
+    return os.path.abspath(result)
+
+
 def find_slicot_function_names(r):
     function_names = {}
     for path, files in r.items():
@@ -116,11 +124,16 @@ class RecursiveFinder(object):
 def main():
     finder = RecursiveFinder(os.pardir)
 
-    # pprint(result)
     function_names = find_slicot_function_names(finder.result)
 
     # pprint(function_names)
     print_sorted_keys(function_names)
+
+    fortran_finder = RecursiveFinder(initial_path=get_first_script_parameter(),
+                                     extension='.f',
+                                     pattern='CALL')
+
+    pprint(fortran_finder.result, width=240)
 
 
 if __name__ == '__main__':

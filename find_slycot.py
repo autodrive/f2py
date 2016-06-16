@@ -91,6 +91,18 @@ def recursively_find_slycot():
     return result
 
 
+class RecursiveFinder(object):
+    def __init__(self, initial_path=os.curdir):
+        self.abs_return_path = os.path.abspath(os.curdir)
+        abs_initial_path = os.path.abspath(initial_path)
+        if not os.path.exists(abs_initial_path):
+            raise IOError('File does not exist: %s' % abs_initial_path)
+        elif not os.path.isdir(abs_initial_path):
+            raise IOError('Not a directory: %s' % abs_initial_path)
+        else:
+            self.abs_initial_path = abs_initial_path
+
+
 def main():
     current_path = pwd()
 

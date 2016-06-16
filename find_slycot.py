@@ -122,9 +122,9 @@ class RecursiveFinder(object):
 
 
 def main():
-    finder = RecursiveFinder(os.pardir)
+    python_finder = RecursiveFinder(os.pardir)
 
-    function_names = find_slicot_function_names(finder.result)
+    function_names = find_slicot_function_names(python_finder.result)
 
     # pprint(function_names)
     print_sorted_keys(function_names)

@@ -95,6 +95,9 @@ class RecursiveFinder(object):
     def __init__(self, initial_path=os.curdir):
         self.abs_return_path = os.path.abspath(os.curdir)
         abs_initial_path = os.path.abspath(initial_path)
+
+        self.result = {}
+
         if not os.path.exists(abs_initial_path):
             raise IOError('File does not exist: %s' % abs_initial_path)
         elif not os.path.isdir(abs_initial_path):
@@ -102,24 +105,28 @@ class RecursiveFinder(object):
         else:
             self.abs_initial_path = abs_initial_path
             os.chdir(self.abs_initial_path)
+            self.walker()
 
     def __del__(self):
         """destructor"""
         os.chdir(self.abs_return_path)
 
+    def walker(self):
+        for root, dirs, files in os.walk(self.abs_initial_path):
+            if '.git' not in root and '.idea' not in root and not root.startswith('..\\build'):
+                folder_list = process_folder(root, files)
+                if folder_list:
+                    self.result[root] = folder_list
+
 
 def main():
-    current_path = pwd()
-
-    result = recursively_find_slycot()
+    finder = RecursiveFinder(os.pardir)
 
     # pprint(result)
-    function_names = find_slicot_function_names(result)
+    function_names = find_slicot_function_names(finder.result)
 
     # pprint(function_names)
     print_sorted_keys(function_names)
-
-    os.chdir(current_path)
 
 
 if __name__ == '__main__':

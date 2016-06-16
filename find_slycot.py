@@ -102,6 +102,10 @@ class RecursiveFinder(object):
         else:
             self.abs_initial_path = abs_initial_path
 
+    def __del__(self):
+        """destructor"""
+        os.chdir(self.abs_return_path)
+
 
 def main():
     current_path = pwd()

@@ -134,7 +134,7 @@ def main():
 
     print_sorted_keys(function_names)
 
-    fortran_finder = RecursiveFinderFortran()
+    fortran_finder = RecursiveFinderFortran(function_list=tuple(function_names.keys()))
 
     pprint(fortran_finder.result, width=240)
 

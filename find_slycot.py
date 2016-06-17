@@ -127,8 +127,14 @@ class RecursiveFinderFortran(RecursiveFinder):
         RecursiveFinder.__init__(self, initial_path=initial_path, extension=extension, pattern=pattern)
 
     def process_file(self, path, file_name):
+        result = []
+
         function_name = os.path.splitext(file_name)[0].lower()
-        print(function_name, function_name in self.function_list)
+
+        if function_name in self.function_list:
+            result = RecursiveFinder.process_file(self, path=path, file_name=file_name)
+
+        return result
 
 
 def main():

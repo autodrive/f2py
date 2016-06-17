@@ -15,7 +15,7 @@ def get_first_script_parameter():
     return os.path.abspath(result)
 
 
-def find_slicot_function_names(r):
+def find_slicot_function_names_from_import(r):
     function_names = {}
     for path, files in r.items():
         for filename, lines in files.items():
@@ -140,7 +140,7 @@ class RecursiveFinderFortran(RecursiveFinder):
 def main():
     python_finder = RecursiveFinder(os.pardir)
 
-    function_names = find_slicot_function_names(python_finder.result)
+    function_names = find_slicot_function_names_from_import(python_finder.result)
 
     print_sorted_keys(function_names)
 

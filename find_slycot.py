@@ -123,8 +123,12 @@ class RecursiveFinder(object):
 
 class RecursiveFinderFortran(RecursiveFinder):
     def __init__(self, initial_path=get_first_script_parameter(), extension='.f', pattern="CALL", function_list=False):
-        RecursiveFinder.__init__(self, initial_path=initial_path, extension=extension, pattern=pattern)
         self.function_list = function_list
+        RecursiveFinder.__init__(self, initial_path=initial_path, extension=extension, pattern=pattern)
+
+    def process_file(self, path, file_name):
+        function_name = os.path.splitext(file_name)[0].lower()
+        print(function_name, function_name in self.function_list)
 
 
 def main():

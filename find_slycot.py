@@ -15,40 +15,12 @@ def get_first_script_parameter():
     return os.path.abspath(result)
 
 
-def handle_import_line(function_names, line, path, filename, line_number, comment='#'):
-    line_strip = line.strip()
-    if not line_strip.startswith(comment):
-        line_strip_split = line_strip.split()
-        if 4 == len(line_strip_split):
-            handle_one_function_import(function_names, line_strip_split, path, filename, line_number)
-        elif 5 == len(line_strip_split):
-            handle_two_functions_import(function_names, line_strip_split, path, filename, line_number)
-
-
 def print_sorted_keys(function_names):
     keys = list(function_names.keys())
     keys.sort()
     for i, key in enumerate(keys):
         print(i, key)
         pprint(function_names[key])
-
-
-def handle_two_functions_import(function_names, line_strip_split, path, filename, line_number):
-    keys = [line_strip_split[3][:-1], line_strip_split[4]]
-    for key in keys:
-        add_function_name(key, function_names, path, filename, line_number)
-
-
-def handle_one_function_import(function_names, line_strip_split, path, filename, line_number):
-    key = line_strip_split[-1]
-    add_function_name(key, function_names, path, filename, line_number)
-
-
-def add_function_name(key, function_names, path, filename, line_number):
-    if key in function_names:
-        function_names[key].append((path, filename, line_number))
-    else:
-        function_names[key] = [(path, filename, line_number)]
 
 
 class RecursiveFinder(object):
@@ -134,15 +106,39 @@ class RecursiveFinderFortran(RecursiveFinder):
 class WhereFunctionUsed(object):
     def __init__(self, finder_result_dict):
         self.finder_result_dict = finder_result_dict
+        self.function_names = {}
 
     def find_slicot_function_names_from_import(self):
-        function_names = {}
         for path, files in self.finder_result_dict.items():
             for filename, lines in files.items():
                 for line_number, line in lines:
-                    handle_import_line(function_names, line, path, filename, line_number)
+                    self.handle_import_line(line, path, filename, line_number)
 
-        return function_names
+        return self.function_names
+
+    def handle_import_line(self, line, path, filename, line_number, comment='#'):
+        line_strip = line.strip()
+        if not line_strip.startswith(comment):
+            line_strip_split = line_strip.split()
+            if 4 == len(line_strip_split):
+                self.handle_one_function_import(line_strip_split, path, filename, line_number)
+            elif 5 == len(line_strip_split):
+                self.handle_two_functions_import(line_strip_split, path, filename, line_number)
+
+    def handle_two_functions_import(self, line_strip_split, path, filename, line_number):
+        keys = [line_strip_split[3][:-1], line_strip_split[4]]
+        for key in keys:
+            self.add_function_name(key, path, filename, line_number)
+
+    def handle_one_function_import(self, line_strip_split, path, filename, line_number):
+        key = line_strip_split[-1]
+        self.add_function_name(key, path, filename, line_number)
+
+    def add_function_name(self, key, path, filename, line_number):
+        if key in self.function_names:
+            self.function_names[key].append((path, filename, line_number))
+        else:
+            self.function_names[key] = [(path, filename, line_number)]
 
 
 def main():

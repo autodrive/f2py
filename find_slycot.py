@@ -208,7 +208,7 @@ class FindFunctionUsedFortran(FindFunctionNamesFromImport):
 
     def handle_file(self, filename, line, line_number, path):
         function_name = self.find_function_name_from_call_line(line)
-        self.add_function_name(function_name, 'src', filename, line_number)
+        self.add_function_name(function_name, os.path.join('slycot', 'src'), filename, line_number)
 
     @staticmethod
     def find_function_name_from_call_line(line):
@@ -227,12 +227,10 @@ def main():
     python_function_finder = FindFunctionNamesFromImport(python_finder.result)
     function_names = python_function_finder.find_function_names()
 
-    print_sorted_keys(function_names)
-
     fortran_finder = RecursiveFinderFortran(function_list=tuple(function_names.keys()))
 
-    pprint(fortran_finder.result.values()[0], width=240)
     fortran_function_finder = FindFunctionUsedFortran(fortran_finder.result)
+    fortran_function_finder.function_names = function_names
     fortran_function_names = fortran_function_finder.find_function_names()
 
     print_sorted_keys(fortran_function_names)

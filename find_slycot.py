@@ -222,7 +222,7 @@ def main():
 
     fortran_finder = RecursiveFinderFortran(function_list=tuple(function_names.keys()))
 
-    pprint(fortran_finder.result, width=240)
+    pprint(fortran_finder.result.values()[0], width=240)
     fortran_function_finder = FindFunctionUsedFortran(fortran_finder.result)
     fortran_function_names = fortran_function_finder.find_function_names()
 

@@ -15,16 +15,6 @@ def get_first_script_parameter():
     return os.path.abspath(result)
 
 
-def find_slicot_function_names_from_import(r):
-    function_names = {}
-    for path, files in r.items():
-        for filename, lines in files.items():
-            for line_number, line in lines:
-                handle_import_line(function_names, line, path, filename, line_number)
-
-    return function_names
-
-
 def handle_import_line(function_names, line, path, filename, line_number, comment='#'):
     line_strip = line.strip()
     if not line_strip.startswith(comment):
@@ -141,10 +131,25 @@ class RecursiveFinderFortran(RecursiveFinder):
         return result
 
 
+class WhereFunctionUsed(object):
+    def __init__(self, finder_result_dict):
+        self.finder_result_dict = finder_result_dict
+
+    def find_slicot_function_names_from_import(self):
+        function_names = {}
+        for path, files in self.finder_result_dict.items():
+            for filename, lines in files.items():
+                for line_number, line in lines:
+                    handle_import_line(function_names, line, path, filename, line_number)
+
+        return function_names
+
+
 def main():
     python_finder = RecursiveFinder(os.pardir)
 
-    function_names = find_slicot_function_names_from_import(python_finder.result)
+    python_function_finder = WhereFunctionUsed(python_finder.result)
+    function_names = python_function_finder.find_slicot_function_names_from_import()
 
     print_sorted_keys(function_names)
 

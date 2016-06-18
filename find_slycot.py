@@ -126,13 +126,21 @@ class WhereFunctionUsed(object):
                 self.handle_two_functions_import(line_strip_split, path, filename, line_number)
 
     def handle_two_functions_import(self, line_strip_split, path, filename, line_number):
-        keys = [line_strip_split[3][:-1], line_strip_split[4]]
-        for key in keys:
+        function_name_list = self.find_function_names(line_strip_split)
+        for key in function_name_list:
             self.add_function_name(key, path, filename, line_number)
 
+    def find_function_names(self, line_strip_split):
+        function_name_list = [line_strip_split[3][:-1], line_strip_split[4]]
+        return function_name_list
+
     def handle_one_function_import(self, line_strip_split, path, filename, line_number):
+        function_name = self.find_function_name(line_strip_split)
+        self.add_function_name(function_name, path, filename, line_number)
+
+    def find_function_name(self, line_strip_split):
         key = line_strip_split[-1]
-        self.add_function_name(key, path, filename, line_number)
+        return key
 
     def add_function_name(self, key, path, filename, line_number):
         if key in self.function_names:

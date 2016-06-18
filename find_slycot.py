@@ -198,7 +198,18 @@ class FindFunctionUsedFortran(FindFunctionNamesFromImport):
         return 'C' == line[1 - 1]
 
     def handle_file(self, filename, line, line_number, path):
-        print(line)
+        function_name = self.find_function_name_from_call_line(line)
+        self.add_function_name(function_name, 'src', filename, line_number)
+
+    @staticmethod
+    def find_function_name_from_call_line(line):
+        line_strip = line.strip()
+        line_strip_split = line_strip.split()
+        while 'CALL' != line_strip_split[0]:
+            line_strip_split.pop(0)
+        function_name_candidate = line_strip_split[1]
+        function_name = function_name_candidate[:function_name_candidate.index('(')].lower()
+        return function_name
 
 
 def main():

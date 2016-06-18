@@ -20,15 +20,19 @@ def find_slicot_function_names_from_import(r):
     for path, files in r.items():
         for filename, lines in files.items():
             for line_number, line in lines:
-                line_strip = line.strip()
-                if not line_strip.startswith('#'):
-                    line_strip_split = line_strip.split()
-                    if 4 == len(line_strip_split):
-                        handle_one_function_import(function_names, line_strip_split, path, filename, line_number)
-                    elif 5 == len(line_strip_split):
-                        handle_two_functions_import(function_names, line_strip_split, path, filename, line_number)
+                handle_import_line(function_names, line, path, filename, line_number)
 
     return function_names
+
+
+def handle_import_line(function_names, line, path, filename, line_number, comment='#'):
+    line_strip = line.strip()
+    if not line_strip.startswith(comment):
+        line_strip_split = line_strip.split()
+        if 4 == len(line_strip_split):
+            handle_one_function_import(function_names, line_strip_split, path, filename, line_number)
+        elif 5 == len(line_strip_split):
+            handle_two_functions_import(function_names, line_strip_split, path, filename, line_number)
 
 
 def print_sorted_keys(function_names):

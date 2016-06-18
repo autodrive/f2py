@@ -112,13 +112,28 @@ class WhereFunctionUsed(object):
         for path, files in self.finder_result_dict.items():
             for filename, lines in files.items():
                 for line_number, line in lines:
-                    self.handle_import_line(line, path, filename, line_number)
+                    self.handle_import_line_if_not_comment(line, path, filename, line_number)
 
         return self.function_names
 
-    def handle_import_line(self, line, path, filename, line_number, comment='#'):
-        line_strip = line.strip()
-        if not line_strip.startswith(comment):
+    @staticmethod
+    def is_comment(line):
+        """
+        python version
+        Parameters
+        ----------
+        line
+
+        Returns
+        -------
+
+        """
+        return '#' == line.strip()[0]
+
+    def handle_import_line_if_not_comment(self, line, path, filename, line_number):
+        if not self.is_comment(line):
+            line_strip = line.strip()
+
             line_strip_split = line_strip.split()
             if 4 == len(line_strip_split):
                 self.handle_one_function_import(line_strip_split, path, filename, line_number)

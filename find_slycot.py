@@ -93,6 +93,17 @@ class RecursiveFinderFortran(RecursiveFinder):
         RecursiveFinder.__init__(self, initial_path=initial_path, extension=extension, pattern=pattern)
 
     def process_file(self, path, file_name):
+        """
+        Process the file if in the list
+        Parameters
+        ----------
+        path
+        file_name
+
+        Returns
+        -------
+
+        """
         result = []
 
         function_name = os.path.splitext(file_name)[0].lower()

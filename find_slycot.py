@@ -19,7 +19,7 @@ def print_sorted_keys(function_names):
     keys = list(function_names.keys())
     keys.sort()
     for i, key in enumerate(keys):
-        print(i, key)
+        print(i, key, len(function_names[key]))
         pprint(function_names[key])
 
 

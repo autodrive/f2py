@@ -114,16 +114,16 @@ class RecursiveFinderFortran(RecursiveFinder):
         return result
 
 
-class WhereFunctionUsed(object):
+class FindFunctionNamesFromImport(object):
     def __init__(self, finder_result_dict):
         self.finder_result_dict = finder_result_dict
         self.function_names = {}
 
-    def find_slicot_function_names_from_import(self):
+    def find_function_names(self):
         for path, files in self.finder_result_dict.items():
             for filename, lines in files.items():
                 for line_number, line in lines:
-                    self.handle_import_line_if_not_comment(line, path, filename, line_number)
+                    self.handle_line_if_not_comment(line, path, filename, line_number)
 
         return self.function_names
 
@@ -141,7 +141,7 @@ class WhereFunctionUsed(object):
         """
         return '#' == line.strip()[0]
 
-    def handle_import_line_if_not_comment(self, line, path, filename, line_number):
+    def handle_line_if_not_comment(self, line, path, filename, line_number):
         if not self.is_comment(line):
             self.handle_file(filename, line, line_number, path)
 
@@ -167,21 +167,21 @@ class WhereFunctionUsed(object):
             self.handle_two_functions_import(line_strip_split, path, filename, line_number)
 
     def handle_two_functions_import(self, line_strip_split, path, filename, line_number):
-        function_name_list = self.find_function_names(line_strip_split)
+        function_name_list = self.find_function_names_from_import(line_strip_split)
         for key in function_name_list:
             self.add_function_name(key, path, filename, line_number)
 
     @staticmethod
-    def find_function_names(line_strip_split):
+    def find_function_names_from_import(line_strip_split):
         function_name_list = [line_strip_split[3][:-1], line_strip_split[4]]
         return function_name_list
 
     def handle_one_function_import(self, line_strip_split, path, filename, line_number):
-        function_name = self.find_function_name(line_strip_split)
+        function_name = self.find_function_name_from_import(line_strip_split)
         self.add_function_name(function_name, path, filename, line_number)
 
     @staticmethod
-    def find_function_name(line_strip_split):
+    def find_function_name_from_import(line_strip_split):
         key = line_strip_split[-1]
         return key
 
@@ -192,7 +192,7 @@ class WhereFunctionUsed(object):
             self.function_names[key] = [(path, filename, line_number)]
 
 
-class WhereFunctionUsedFortran(WhereFunctionUsed):
+class FindFunctionUsedFortran(FindFunctionNamesFromImport):
     @staticmethod
     def is_comment(line):
         return 'C' == line[1 - 1]
@@ -201,15 +201,15 @@ class WhereFunctionUsedFortran(WhereFunctionUsed):
 def main():
     python_finder = RecursiveFinder(os.pardir)
 
-    python_function_finder = WhereFunctionUsed(python_finder.result)
-    function_names = python_function_finder.find_slicot_function_names_from_import()
+    python_function_finder = FindFunctionNamesFromImport(python_finder.result)
+    function_names = python_function_finder.find_function_names()
 
     print_sorted_keys(function_names)
 
     fortran_finder = RecursiveFinderFortran(function_list=tuple(function_names.keys()))
 
     pprint(fortran_finder.result, width=240)
-    # fortran_function_finder = WhereFunctionUsedFortran(fortran_finder.result)
+    # fortran_function_finder = FindFunctionUsedFortran(fortran_finder.result)
     # fortran_function_names = fortran_function_finder.find_slicot_function_names_from_import()
 
     # print_sorted_keys(fortran_function_names)

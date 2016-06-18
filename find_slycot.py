@@ -17,7 +17,16 @@ def get_first_script_parameter():
 
 def print_sorted_keys(function_names):
     keys = list(function_names.keys())
-    keys.sort()
+
+    def compare(a, b):
+        if len(function_names[a]) > len(function_names[b]):
+            return -1
+        elif len(function_names[a]) < len(function_names[b]):
+            return 1
+        else:
+            return cmp(a, b)
+
+    keys.sort(cmp=compare)
     for i, key in enumerate(keys):
         print(i, key, len(function_names[key]))
         pprint(function_names[key])

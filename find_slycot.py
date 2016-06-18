@@ -145,7 +145,8 @@ class WhereFunctionUsed(object):
         for key in function_name_list:
             self.add_function_name(key, path, filename, line_number)
 
-    def find_function_names(self, line_strip_split):
+    @staticmethod
+    def find_function_names(line_strip_split):
         function_name_list = [line_strip_split[3][:-1], line_strip_split[4]]
         return function_name_list
 
@@ -153,7 +154,8 @@ class WhereFunctionUsed(object):
         function_name = self.find_function_name(line_strip_split)
         self.add_function_name(function_name, path, filename, line_number)
 
-    def find_function_name(self, line_strip_split):
+    @staticmethod
+    def find_function_name(line_strip_split):
         key = line_strip_split[-1]
         return key
 

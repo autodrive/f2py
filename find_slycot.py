@@ -197,6 +197,9 @@ class FindFunctionUsedFortran(FindFunctionNamesFromImport):
     def is_comment(line):
         return 'C' == line[1 - 1]
 
+    def handle_file(self, filename, line, line_number, path):
+        print(line)
+
 
 def main():
     python_finder = RecursiveFinder(os.pardir)
@@ -209,10 +212,10 @@ def main():
     fortran_finder = RecursiveFinderFortran(function_list=tuple(function_names.keys()))
 
     pprint(fortran_finder.result, width=240)
-    # fortran_function_finder = FindFunctionUsedFortran(fortran_finder.result)
-    # fortran_function_names = fortran_function_finder.find_slicot_function_names_from_import()
+    fortran_function_finder = FindFunctionUsedFortran(fortran_finder.result)
+    fortran_function_names = fortran_function_finder.find_function_names()
 
-    # print_sorted_keys(fortran_function_names)
+    print_sorted_keys(fortran_function_names)
 
 if __name__ == '__main__':
     main()

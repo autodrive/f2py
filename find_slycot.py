@@ -143,13 +143,28 @@ class WhereFunctionUsed(object):
 
     def handle_import_line_if_not_comment(self, line, path, filename, line_number):
         if not self.is_comment(line):
-            line_strip = line.strip()
+            self.handle_file(filename, line, line_number, path)
 
-            line_strip_split = line_strip.split()
-            if 4 == len(line_strip_split):
-                self.handle_one_function_import(line_strip_split, path, filename, line_number)
-            elif 5 == len(line_strip_split):
-                self.handle_two_functions_import(line_strip_split, path, filename, line_number)
+    def handle_file(self, filename, line, line_number, path):
+        """
+        find function names from import line
+        Parameters
+        ----------
+        filename
+        line
+        line_number
+        path
+
+        Returns
+        -------
+
+        """
+        line_strip = line.strip()
+        line_strip_split = line_strip.split()
+        if 4 == len(line_strip_split):
+            self.handle_one_function_import(line_strip_split, path, filename, line_number)
+        elif 5 == len(line_strip_split):
+            self.handle_two_functions_import(line_strip_split, path, filename, line_number)
 
     def handle_two_functions_import(self, line_strip_split, path, filename, line_number):
         function_name_list = self.find_function_names(line_strip_split)
@@ -177,6 +192,12 @@ class WhereFunctionUsed(object):
             self.function_names[key] = [(path, filename, line_number)]
 
 
+class WhereFunctionUsedFortran(WhereFunctionUsed):
+    @staticmethod
+    def is_comment(line):
+        return 'C' == line[1 - 1]
+
+
 def main():
     python_finder = RecursiveFinder(os.pardir)
 
@@ -188,7 +209,10 @@ def main():
     fortran_finder = RecursiveFinderFortran(function_list=tuple(function_names.keys()))
 
     pprint(fortran_finder.result, width=240)
+    # fortran_function_finder = WhereFunctionUsedFortran(fortran_finder.result)
+    # fortran_function_names = fortran_function_finder.find_slicot_function_names_from_import()
 
+    # print_sorted_keys(fortran_function_names)
 
 if __name__ == '__main__':
     main()

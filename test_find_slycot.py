@@ -65,8 +65,8 @@ class TestFindSlycotFindFunctionsUsed(unittest.TestCase):
     def test_find_function_names_from_import(self):
         arg_result_tuple = (
             (['from', 'slycot', 'import', 'tb04ad,', 'td04ad'], ['tb04ad', 'td04ad']),
-            (['#from', 'slycot', 'import', 'sb01bd'], ['sb01bd']),
-            (['#', 'from', 'slycot', 'import', 'ab01md'], ['ab01md']),
+            # (['#from', 'slycot', 'import', 'sb01bd'], ['sb01bd']),
+            # (['#', 'from', 'slycot', 'import', 'ab01md'], ['ab01md']),
             (['from', 'slycot', 'import', 'sb10hd'], ['sb10hd']),
             (['from', 'slycot', 'import', 'sb10ad'], ['sb10ad']),
             (['from', 'slycot', 'import', 'ab09ad'], ['ab09ad']),

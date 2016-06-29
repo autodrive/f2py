@@ -172,6 +172,7 @@ class FindFunctionNamesFromImport(object):
 
         return self.function_names
 
+    # TODO : More Testable Code : line -> function name
     @staticmethod
     def is_comment(line):
         """
@@ -218,7 +219,7 @@ class FindFunctionNamesFromImport(object):
 
     @staticmethod
     def find_function_names_from_import(line_strip_split):
-        function_name_list = [line_strip_split[3][:-1], line_strip_split[4]]
+        function_name_list = [function_name.strip(',') for function_name in line_strip_split[3:]]
         return function_name_list
 
     def handle_one_function_import(self, line_strip_split, path, filename, line_number):

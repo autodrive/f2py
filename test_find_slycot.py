@@ -4,6 +4,31 @@ import unittest
 import find_slycot
 
 
+class TestFindSlycotFindFunctionsUsed(unittest.TestCase):
+    def setUp(self):
+        self.result_dict = {'..\\external': {'yottalab.py': [(28, 'from slycot import sb02od')]},
+                            '..\\control': {
+            'robust.py': [(86, '        from slycot import sb10hd'), (145, '        from slycot import sb10ad')],
+            'modelsimp.py': [(256, '            from slycot import ab09ad')],
+            'statefbk.py': [(76, '        from slycot import sb01bd'), (192, '        from slycot import sb02md'),
+                            (193, '        from slycot import sb02mt'), (372, '        from slycot import sb03md')],
+            'xferfcn.py': [(1092, '            from slycot import tb04ad')],
+            'mateqn.py': [(76, '        from slycot import sb03md'), (81, '        from slycot import sb04md'),
+                          (193, '            from slycot import sg03ad'), (258, '        from slycot import sb03md'),
+                          (263, '        from slycot import sb04qd'), (268, '        from slycot import sg03ad'),
+                          (439, '        from slycot import sb02md'), (444, '        from slycot import sb02mt'),
+                          (450, '        from slycot import sg02ad'), (708, '        from slycot import sb02md'),
+                          (713, '        from slycot import sb02mt'), (719, '        from slycot import sg02ad')],
+            'statesp.py': [(480, '            from slycot import tb01pd'),
+                           (646, '            from slycot import td04ad')]},
+                            '..\\examples': {
+            'slicot-test.py': [(19, '#from slycot import sb01bd'), (24, '# from slycot import ab01md')]},
+                            '..\\control\\tests': {
+                                'slycot_convert_test.py': [(56, '        from slycot import tb04ad, td04ad'),
+                                                           (115, '        from slycot import tb04ad, td04ad')]}}
+        self.f = find_slycot.FindFunctionNamesFromImport(self.result_dict)
+
+
 class TestFindSlycotFindFunctionUsedFortran(unittest.TestCase):
     def setUp(self):
         self.result_dict = {os.path.join('..', '..', 'slycot', 'slycot', 'src'): {

@@ -282,16 +282,9 @@ class FindFunctionUsedFortran(FindFunctionNamesFromImport):
         -------
 
         """
-        # remove white space
-        line_strip = line.strip()
-        # split by whitespace
-        line_strip_split = line_strip.split()
-        while 'CALL' != line_strip_split[0]:
-            line_strip_split.pop(0)
-        # string right after CALL
-        function_name_candidate = line_strip_split[1]
-        # string before '(' as function name
-        function_name = function_name_candidate[:function_name_candidate.index('(')].lower()
+        # string between CALL and '('
+        function_name_candidate = re.findall(r'CALL\s*(.*?)\s*\(', line)
+        function_name = function_name_candidate[0].lower()
         return function_name
 
 

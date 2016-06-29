@@ -296,11 +296,13 @@ class FindFunctionUsedFortran(FindFunctionNamesFromImport):
 
 
 def main():
+    # from python import lines, find fortran function names
     python_finder = RecursiveFinder(os.pardir)
 
     python_function_finder = FindFunctionNamesFromImport(python_finder.result)
     function_names = python_function_finder.find_function_names()
 
+    # from fortran CALL lines, find selected fortran function names
     fortran_finder = RecursiveFinderFortran(function_list=tuple(function_names.keys()))
 
     fortran_function_finder = FindFunctionUsedFortran(fortran_finder.result)

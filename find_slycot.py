@@ -240,19 +240,57 @@ class FindFunctionNamesFromImport(object):
 class FindFunctionUsedFortran(FindFunctionNamesFromImport):
     @staticmethod
     def is_comment(line):
+        """
+        If a line's first column is C, it is a comment
+        Parameters
+        ----------
+        line
+
+        Returns
+        -------
+
+        """
         return 'C' == line[1 - 1]
 
     def handle_file(self, filename, line, line_number, path):
+        """
+        find function name from call line
+        and add Fortran file path with filename and line number
+        Parameters
+        ----------
+        filename
+        line
+        line_number
+        path
+
+        Returns
+        -------
+
+        """
         function_name = self.find_function_name_from_call_line(line)
         self.add_function_name(function_name, os.path.join('slycot', 'src'), filename, line_number)
 
     @staticmethod
     def find_function_name_from_call_line(line):
+        """
+        find string between 'CALL' and '('
+        Parameters
+        ----------
+        line
+
+        Returns
+        -------
+
+        """
+        # remove white space
         line_strip = line.strip()
+        # split by whitespace
         line_strip_split = line_strip.split()
         while 'CALL' != line_strip_split[0]:
             line_strip_split.pop(0)
+        # string right after CALL
         function_name_candidate = line_strip_split[1]
+        # string before '(' as function name
         function_name = function_name_candidate[:function_name_candidate.index('(')].lower()
         return function_name
 

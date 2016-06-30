@@ -217,10 +217,7 @@ class FindFunctionNamesFromImport(object):
         """
         line_strip = line.strip()
         line_strip_split = line_strip.split()
-        if 4 == len(line_strip_split):
-            self.handle_one_function_import(line_strip_split, path, filename, line_number)
-        elif 5 == len(line_strip_split):
-            self.handle_two_functions_import(line_strip_split, path, filename, line_number)
+        self.handle_two_functions_import(line_strip_split, path, filename, line_number)
 
     def handle_two_functions_import(self, line_strip_split, path, filename, line_number):
         function_name_list = self.find_function_names_from_import(line_strip_split)

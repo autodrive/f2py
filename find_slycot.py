@@ -310,9 +310,15 @@ def main():
     fortran_function_finder = FindFunctionUsedFortran(fortran_finder.result, function_names)
     fortran_function_names = fortran_function_finder.find_function_names()
 
-    print_sorted_keys(fortran_function_names)
+    # find go to lines from Fortran source codes recursively visiting sub-folders
+    fortran_go_to = RecursiveFinderFortran(function_list=tuple(function_names.keys()), pattern='GO')
 
-    # TODO : find number of GOTO's in selected functions
+    pprint(fortran_go_to.result)
+
+    # find go to lines from Fortran source codes recursively visiting sub-folders
+    fortran_goto = RecursiveFinderFortran(function_list=tuple(function_names.keys()), pattern='GOTO')
+
+    pprint(fortran_goto.result)
 
 
 if __name__ == '__main__':

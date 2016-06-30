@@ -93,7 +93,10 @@ class RecursiveFinder(object):
     def walker(self):
         for root, dirs, files in os.walk(self.abs_initial_path):
             # TODO : list of folders to ignore
-            if '.git' not in root and '.idea' not in root and '\\build\\' not in root:
+            if ('.git' not in root) \
+                    and ('.idea' not in root)\
+                    and ('\\build\\' not in root)\
+                    and ('slycot_conversion' not in root):
                 folder_list = self.process_folder(root, files)
                 if folder_list:
                     self.result[root] = folder_list

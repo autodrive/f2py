@@ -95,6 +95,25 @@ class TestFindSlycotFindFunctionsUsed(unittest.TestCase):
         for arg, expected in arg_result_tuple:
             self.assertEqual(self.f.find_function_names_from_import(arg), expected)
 
+    def test_handle_file4(self):
+        args4 = ('yottalab.py',
+                 'from slycot import sb02od',
+                 28,
+                 os.path.join('..', 'control', 'tests'))
+        self.f.handle_file(*args4)
+        expected = {'sb02od': [('..\\control\\tests', 'yottalab.py', 28)]}
+        self.assertSequenceEqual(self.f.function_names, expected)
+
+    def test_handle_file5(self):
+        args5 = ('slycot_convert_test.py',
+                 '''        from slycot import tb04ad, td04ad''',
+                 115,
+                 os.path.join('..', 'control', 'tests'))
+        self.f.handle_file(*args5)
+        expected = {'td04ad': [('..\\control\\tests', 'slycot_convert_test.py', 115)],
+                    'tb04ad': [('..\\control\\tests', 'slycot_convert_test.py', 115)]}
+        self.assertSequenceEqual(self.f.function_names, expected)
+
 
 class TestFindSlycotFindFunctionUsedFortran(unittest.TestCase):
     def setUp(self):

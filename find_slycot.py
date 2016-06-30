@@ -314,11 +314,18 @@ def main():
     fortran_go_to = RecursiveFinderFortran(function_list=tuple(function_names.keys()), pattern='GO')
 
     pprint(fortran_go_to.result)
+    fortran_go_to_set = set(fortran_go_to.result.values()[0].keys())
 
     # find go to lines from Fortran source codes recursively visiting sub-folders
     fortran_goto = RecursiveFinderFortran(function_list=tuple(function_names.keys()), pattern='GOTO')
 
     pprint(fortran_goto.result)
+    fortran_goto_set = set(fortran_goto.result.values()[0].keys())
+
+    fortran_go_to_set.union(fortran_goto_set)
+    print(len(fortran_go_to_set))
+    for function_name in sorted(list(fortran_go_to_set)):
+        print function_name
 
 
 if __name__ == '__main__':

@@ -237,6 +237,16 @@ class FindFunctionNamesFromImport(object):
 
 
 class FindFunctionUsedFortran(FindFunctionNamesFromImport):
+    def __init__(self, finder_result_dict, function_names=None):
+        FindFunctionNamesFromImport.__init__(self, finder_result_dict)
+        self.finder_result_dict = finder_result_dict
+        if function_names is None:
+            self.function_names = {}
+        elif isinstance(function_names, dict):
+            self.function_names = function_names
+        else:
+            raise TypeError('function_names expected to be a dictionary')
+
     @staticmethod
     def is_comment(line):
         """
@@ -297,8 +307,7 @@ def main():
     # from fortran CALL lines, find selected fortran function names
     fortran_finder = RecursiveFinderFortran(function_list=tuple(function_names.keys()))
 
-    fortran_function_finder = FindFunctionUsedFortran(fortran_finder.result)
-    fortran_function_finder.function_names = function_names
+    fortran_function_finder = FindFunctionUsedFortran(fortran_finder.result, function_names)
     fortran_function_names = fortran_function_finder.find_function_names()
 
     print_sorted_keys(fortran_function_names)

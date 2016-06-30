@@ -66,40 +66,6 @@ class TestFindSlycotFindFunctionsUsed(unittest.TestCase):
         for key in expected_key_set:
             self.assertSequenceEqual(result[key], expected[key])
 
-    def test_find_function_name_from_import(self):
-        arg_result_tuple = (
-            (['#from', 'slycot', 'import', 'sb01bd'], 'sb01bd'),
-            (['#', 'from', 'slycot', 'import', 'ab01md'], 'ab01md'),
-            # (['from', 'slycot', 'import', 'tb04ad,', 'td04ad'], 'td04ad'),
-            # (['from', 'slycot', 'import', 'tb04ad,', 'td04ad'], 'td04ad'),
-            (['from', 'slycot', 'import', 'sb10hd'], 'sb10hd'),
-            (['from', 'slycot', 'import', 'sb10ad'], 'sb10ad'),
-            (['from', 'slycot', 'import', 'ab09ad'], 'ab09ad'),
-            (['from', 'slycot', 'import', 'sb01bd'], 'sb01bd'),
-            (['from', 'slycot', 'import', 'sb02md'], 'sb02md'),
-            (['from', 'slycot', 'import', 'sb02mt'], 'sb02mt'),
-            (['from', 'slycot', 'import', 'sb03md'], 'sb03md'),
-            (['from', 'slycot', 'import', 'tb04ad'], 'tb04ad'),
-            (['from', 'slycot', 'import', 'sb03md'], 'sb03md'),
-            (['from', 'slycot', 'import', 'sb04md'], 'sb04md'),
-            (['from', 'slycot', 'import', 'sg03ad'], 'sg03ad'),
-            (['from', 'slycot', 'import', 'sb03md'], 'sb03md'),
-            (['from', 'slycot', 'import', 'sb04qd'], 'sb04qd'),
-            (['from', 'slycot', 'import', 'sg03ad'], 'sg03ad'),
-            (['from', 'slycot', 'import', 'sb02md'], 'sb02md'),
-            (['from', 'slycot', 'import', 'sb02mt'], 'sb02mt'),
-            (['from', 'slycot', 'import', 'sg02ad'], 'sg02ad'),
-            (['from', 'slycot', 'import', 'sb02md'], 'sb02md'),
-            (['from', 'slycot', 'import', 'sb02mt'], 'sb02mt'),
-            (['from', 'slycot', 'import', 'sg02ad'], 'sg02ad'),
-            (['from', 'slycot', 'import', 'tb01pd'], 'tb01pd'),
-            (['from', 'slycot', 'import', 'td04ad'], 'td04ad'),
-            (['from', 'slycot', 'import', 'sb02od'], 'sb02od'),
-        )
-
-        for arg, expected in arg_result_tuple:
-            self.assertEqual(self.f.find_function_name_from_import(arg), expected)
-
     def test_find_function_names_from_import(self):
         arg_result_tuple = (
             (['from', 'slycot', 'import', 'tb04ad,', 'td04ad'], ['tb04ad', 'td04ad']),

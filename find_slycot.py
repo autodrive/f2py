@@ -229,15 +229,6 @@ class FindFunctionNamesFromImport(object):
         function_name_list = [function_name.strip(',') for function_name in line_strip_split[3:]]
         return function_name_list
 
-    def handle_one_function_import(self, line_strip_split, path, filename, line_number):
-        function_name = self.find_function_name_from_import(line_strip_split)
-        self.add_function_name(function_name, path, filename, line_number)
-
-    @staticmethod
-    def find_function_name_from_import(line_strip_split):
-        key = line_strip_split[-1]
-        return key
-
     def add_function_name(self, key, path, filename, line_number):
         if key in self.function_names:
             self.function_names[key].append((path, filename, line_number))

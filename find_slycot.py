@@ -303,5 +303,8 @@ def main():
 
     print_sorted_keys(fortran_function_names)
 
+    # TODO : find number of GOTO's in selected functions
+
+
 if __name__ == '__main__':
     main()

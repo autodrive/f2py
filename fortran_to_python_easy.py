@@ -69,6 +69,16 @@ def replace_loop(fortran_src, pairs, separator=''):
     return after
 
 
+def replace_word(fortran_word):
+    python_word = {
+        'SUBROUTINE': 'def',
+        'DO': 'for',
+        'IF': 'if',
+        'THEN': ':',
+    }
+    return python_word[fortran_word]
+
+
 def main(fortran_filename, b_include_fortran=True):
     fortran_src = read_text_content(fortran_filename)
 

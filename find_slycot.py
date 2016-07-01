@@ -243,7 +243,8 @@ class FindFunctionUsedFortran(FindFunctionNamesFromImport):
         if function_names is None:
             self.function_names = {}
         elif isinstance(function_names, dict):
-            self.function_names = function_names
+            import copy
+            self.function_names = copy.deepcopy(function_names)
         else:
             raise TypeError('function_names expected to be a dictionary')
 

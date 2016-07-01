@@ -69,7 +69,8 @@ class RecursiveFinder(object):
     """
     Search for pattern in files of given extension recursively
     """
-    def __init__(self, initial_path=os.curdir, extension='.py', pattern="from" + " slycot import"):
+
+    def __init__(self, initial_path=os.curdir, extension='.py', pattern="from" + " slycot import", b_rel_path=True):
         self.abs_return_path = pwd()
         self.extension = extension
         self.pattern = pattern
@@ -77,6 +78,8 @@ class RecursiveFinder(object):
         self.result = {}
 
         abs_initial_path = os.path.abspath(initial_path)
+        self.b_rel_path = b_rel_path
+
         if not os.path.exists(abs_initial_path):
             raise IOError('File does not exist: %s' % abs_initial_path)
         elif not os.path.isdir(abs_initial_path):
@@ -99,7 +102,11 @@ class RecursiveFinder(object):
                     and ('slycot_conversion' not in root):
                 folder_list = self.process_folder(root, files)
                 if folder_list:
-                    self.result[root] = folder_list
+                    if self.b_rel_path:
+                        key = os.path.relpath(root, self.abs_initial_path)
+                    else:
+                        key = root
+                    self.result[key] = folder_list
 
     def process_folder(self, root, files):
         current_path = pwd()

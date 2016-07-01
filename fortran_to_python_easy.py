@@ -39,20 +39,26 @@ def replace_logical_operators(fortran_src):
         ('.NOT.', 'not'),
     )
 
+    return replace_loop(fortran_src, logical_operators)
+
+
+def replace_loop(fortran_src, pairs):
+
     before = str(fortran_src)
-    for old, new in logical_operators:
+    for old, new in pairs:
         after = before.replace(old, (' %s ' % new))
         before = after
-
     return after
 
 
 def main(fortran_filename):
     fortran_src = read_text_content(fortran_filename)
 
-    fortran_src = replace_logical_operators(fortran_src)
+    fortran_src_replaced = replace_logical_operators(fortran_src)
+    del fortran_src
 
-    fortran_lines = fortran_src.splitlines()
+    fortran_lines = fortran_src_replaced.splitlines()
+    del fortran_src_replaced
 
     python_lines = []
 

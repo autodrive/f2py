@@ -2,6 +2,7 @@
 Find slycot functions directly or indirectly called in python-control
 >>> python find_slycot.py [path to slycot local repository]
 """
+import copy
 import os
 import re
 from pprint import pprint
@@ -243,7 +244,6 @@ class FindFunctionUsedFortran(FindFunctionNamesFromImport):
         if function_names is None:
             self.function_names = {}
         elif isinstance(function_names, dict):
-            import copy
             self.function_names = copy.deepcopy(function_names)
         else:
             raise TypeError('function_names expected to be a dictionary')
@@ -305,29 +305,41 @@ def main():
     python_function_finder = FindFunctionNamesFromImport(python_finder.result)
     function_names = python_function_finder.find_function_names()
 
+    print("imported ".ljust(60, '#'))
+    pprint(function_names)
+    print("end imported ".ljust(60, '*'))
+
     # from fortran CALL lines, find selected fortran function names
     fortran_finder = RecursiveFinderFortran(function_list=tuple(function_names.keys()))
 
     fortran_function_finder = FindFunctionUsedFortran(fortran_finder.result, function_names)
     fortran_function_names = fortran_function_finder.find_function_names()
+    print("called ".ljust(60, '#'))
+    pprint(fortran_function_names)
+    print("end called ".ljust(60, '*'))
 
     # find go to lines from Fortran source codes recursively visiting sub-folders
     fortran_go_to = RecursiveFinderFortran(function_list=tuple(function_names.keys()), pattern='GO')
 
+    print("with go to ".ljust(60, '#'))
     pprint(fortran_go_to.result)
     fortran_go_to_set = set(fortran_go_to.result.values()[0].keys())
+    print("end with go to ".ljust(60, '*'))
 
     # find go to lines from Fortran source codes recursively visiting sub-folders
     fortran_goto = RecursiveFinderFortran(function_list=tuple(function_names.keys()), pattern='GOTO')
 
+    print("with goto ".ljust(60, '#'))
     pprint(fortran_goto.result)
     fortran_goto_set = set(fortran_goto.result.values()[0].keys())
+    print("end with goto ".ljust(60, '*'))
 
     fortran_go_to_set.union(fortran_goto_set)
+    print("with go to or goto ".ljust(60, '#'))
     print(len(fortran_go_to_set))
     for function_name in sorted(list(fortran_go_to_set)):
-        print function_name
-
+        print(function_name.lower()[:-2])
+    print("end go to or goto ".ljust(60, '*'))
 
 if __name__ == '__main__':
     main()

@@ -51,7 +51,7 @@ def replace_loop(fortran_src, pairs):
     return after
 
 
-def main(fortran_filename):
+def main(fortran_filename, b_include_fortran=True):
     fortran_src = read_text_content(fortran_filename)
 
     fortran_src_replaced = replace_logical_operators(fortran_src)
@@ -66,12 +66,16 @@ def main(fortran_filename):
     for k, fortran_line in enumerate(fortran_lines):
         if fortran_info.is_comment(fortran_line):
             python_line = '#' + fortran_line[1:]
-        elif fortran_info.is_continue_previous_line(fortran_line):
-            last_line = python_lines.pop()
-            python_line = last_line + split_symbols(fortran_line)
+            python_lines.append(python_line)
         else:
-            python_line = split_symbols(fortran_line)
-        python_lines.append(python_line)
+            if fortran_info.is_continue_previous_line(fortran_line):
+                last_line = python_lines.pop()
+                python_line = last_line + split_symbols(fortran_line)
+            else:
+                python_line = split_symbols(fortran_line)
+            if b_include_fortran:
+                python_lines.append('#' + fortran_line)
+            python_lines.append(python_line)
 
     # write file
     python_filename = fortran_filename_to_python_filename(fortran_filename)

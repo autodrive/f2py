@@ -305,12 +305,16 @@ def main():
     python_function_finder = FindFunctionNamesFromImport(python_finder.result)
     function_names = python_function_finder.find_function_names()
 
+    function_tuple = tuple(function_names.keys())
+
     print("imported ".ljust(60, '#'))
     pprint(function_names)
     print("end imported ".ljust(60, '*'))
 
     # from fortran CALL lines, find selected fortran function names
-    fortran_finder = RecursiveFinderFortran(function_list=tuple(function_names.keys()))
+    # find go to lines from Fortran source codes recursively visiting sub-folders
+
+    fortran_finder = RecursiveFinderFortran(function_list=function_tuple, pattern='CALL')
 
     fortran_function_finder = FindFunctionUsedFortran(fortran_finder.result, function_names)
     fortran_function_names = fortran_function_finder.find_function_names()
@@ -319,20 +323,10 @@ def main():
     print("end called ".ljust(60, '*'))
 
     # find go to lines from Fortran source codes recursively visiting sub-folders
-    fortran_go_to = RecursiveFinderFortran(function_list=tuple(function_names.keys()), pattern='GO')
+    fortran_go_to_set = find_in_tree(function_tuple, 'GO')
 
-    print("with go to ".ljust(60, '#'))
-    pprint(fortran_go_to.result)
-    fortran_go_to_set = set(fortran_go_to.result.values()[0].keys())
-    print("end with go to ".ljust(60, '*'))
-
-    # find go to lines from Fortran source codes recursively visiting sub-folders
-    fortran_goto = RecursiveFinderFortran(function_list=tuple(function_names.keys()), pattern='GOTO')
-
-    print("with goto ".ljust(60, '#'))
-    pprint(fortran_goto.result)
-    fortran_goto_set = set(fortran_goto.result.values()[0].keys())
-    print("end with goto ".ljust(60, '*'))
+    # find goto lines from Fortran source codes recursively visiting sub-folders
+    fortran_goto_set = find_in_tree(function_tuple, 'GOTO')
 
     fortran_go_to_set.union(fortran_goto_set)
     print("with go to or goto ".ljust(60, '#'))
@@ -340,6 +334,16 @@ def main():
     for function_name in sorted(list(fortran_go_to_set)):
         print(function_name.lower()[:-2])
     print("end go to or goto ".ljust(60, '*'))
+
+
+def find_in_tree(function_tuple, pattern_string):
+    fortran_go_to = RecursiveFinderFortran(function_list=function_tuple, pattern=pattern_string)
+    print(("with %s " % pattern_string).ljust(60, '#'))
+    pprint(fortran_go_to.result)
+    fortran_go_to_set = set(fortran_go_to.result.values()[0].keys())
+    print(("end with %s to " % pattern_string).ljust(60, '*'))
+    return fortran_go_to_set
+
 
 if __name__ == '__main__':
     main()

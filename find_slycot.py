@@ -346,6 +346,9 @@ def main():
     # find goto lines from Fortran source codes recursively visiting sub-folders
     find_in_tree(None, '\t')
 
+    # find goto lines from Fortran source codes recursively visiting sub-folders
+    find_in_tree(None, '[')
+
 
 def find_in_tree(function_tuple, pattern_string):
     fortran_go_to = RecursiveFinderFortran(function_list=function_tuple, pattern=pattern_string)

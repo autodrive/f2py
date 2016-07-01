@@ -39,14 +39,32 @@ def replace_logical_operators(fortran_src):
         ('.NOT.', 'not'),
     )
 
+    return replace_loop(fortran_src, logical_operators, ' ')
+
+
+def replace_symbol(fortran_src):
+    logical_operators = (
+        ('(', '('),
+        (')', ')'),
+    )
+
+    return replace_loop(fortran_src, logical_operators, ' ')
+
+
+def undo_replace_symbol(fortran_src):
+    logical_operators = (
+        (' ( ', '('),
+        (' ) ', ')'),
+    )
+
     return replace_loop(fortran_src, logical_operators)
 
 
-def replace_loop(fortran_src, pairs):
+def replace_loop(fortran_src, pairs, separator=''):
 
     before = str(fortran_src)
     for old, new in pairs:
-        after = before.replace(old, (' %s ' % new))
+        after = before.replace(old, ('%s%s%s' % (separator, new, separator)))
         before = after
     return after
 
@@ -54,11 +72,14 @@ def replace_loop(fortran_src, pairs):
 def main(fortran_filename, b_include_fortran=True):
     fortran_src = read_text_content(fortran_filename)
 
-    fortran_src_replaced = replace_logical_operators(fortran_src)
+    fortran_src_logic_replaced = replace_logical_operators(fortran_src)
     del fortran_src
 
-    fortran_lines = fortran_src_replaced.splitlines()
-    del fortran_src_replaced
+    fortran_src_symbol_replaced = replace_symbol(fortran_src_logic_replaced)
+    del fortran_src_logic_replaced
+
+    fortran_lines = fortran_src_symbol_replaced.splitlines()
+    del fortran_src_symbol_replaced
 
     python_lines = []
 
@@ -66,7 +87,9 @@ def main(fortran_filename, b_include_fortran=True):
     for k, fortran_line in enumerate(fortran_lines):
         if fortran_info.is_comment(fortran_line):
             python_line = '#' + fortran_line[1:]
-            python_lines.append(python_line)
+            python_line_undo = undo_replace_symbol(python_line)
+            del python_line
+            python_lines.append(python_line_undo)
         else:
             if fortran_info.is_continue_previous_line(fortran_line):
                 last_line = python_lines.pop()

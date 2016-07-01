@@ -13,7 +13,7 @@ def read_text_content(filename):
 
 
 def is_comment(fortran_line):
-    whitespace = (' ', '\t')
+    whitespace = (' ', '\t')  # '\t' rarely used in .f files
     result = not (fortran_line[0] in whitespace)
     return result
 

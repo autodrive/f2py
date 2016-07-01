@@ -145,7 +145,12 @@ class RecursiveFinder(object):
 
 class RecursiveFinderFortran(RecursiveFinder):
     def __init__(self, initial_path=get_first_script_parameter(), extension='.f', pattern="CALL", function_list=None):
-        self.function_list = function_list
+
+        if function_list is None:
+            self.function_list = []
+        else:
+            self.function_list = function_list
+
         RecursiveFinder.__init__(self, initial_path=initial_path, extension=extension, pattern=pattern)
 
     def process_file(self, path, file_name):
@@ -164,7 +169,8 @@ class RecursiveFinderFortran(RecursiveFinder):
 
         function_name = os.path.splitext(file_name)[0].lower()
 
-        if function_name in self.function_list:
+        # if self.function_list is empty or function_name is in self.function_list
+        if (not self.function_list) or (function_name in self.function_list):
             result = RecursiveFinder.process_file(self, path=path, file_name=file_name)
 
         return result
@@ -336,7 +342,7 @@ def main():
     print("end go to or goto ".ljust(60, '*'))
 
     # find goto lines from Fortran source codes recursively visiting sub-folders
-    find_in_tree(function_tuple, '\t')
+    find_in_tree(None, '\t')
 
 
 def find_in_tree(function_tuple, pattern_string):

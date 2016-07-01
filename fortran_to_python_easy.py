@@ -2,6 +2,7 @@
 convert fortran file to python if there is no go to
 """
 import os
+import re
 
 import fortran_info
 
@@ -38,15 +39,20 @@ def main(fortran_filename):
             python_line = '#' + fortran_line[1:]
         elif fortran_info.is_continue_previous_line(fortran_line):
             last_line = python_lines.pop()
-            python_lines.append(last_line + '\\')
-            python_line = fortran_line[:5] + ' ' + fortran_line[7:]
+            python_line = last_line + split_symbols(fortran_line)
         else:
-            python_line = fortran_line
+            python_line = split_symbols(fortran_line)
         python_lines.append(python_line)
 
     # write file
     python_filename = fortran_filename_to_python_filename(fortran_filename)
     write_python_file(python_filename, python_lines)
+
+
+def split_symbols(fortran_line):
+    # # http://stackoverflow.com/questions/1059559/python-split-strings-with-multiple-delimiters
+    python_line = re.findall(r"[\w=\.\(\)']+", fortran_line)
+    return python_line
 
 
 if __name__ == '__main__':

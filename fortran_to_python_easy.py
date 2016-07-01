@@ -26,8 +26,31 @@ def write_python_file(python_filename, python_lines):
     f.close()
 
 
+def replace_logical_operators(fortran_src):
+    logical_operators = (
+        ('.EQ.', '=='),
+        ('.NE.', '!='),
+        ('.LT.', '<'),
+        ('.LE.', '<='),
+        ('.GE.', '>='),
+        ('.GT.', '>'),
+        ('.OR.', 'or'),
+        ('.AND.', 'and'),
+        ('.NOT.', 'not'),
+    )
+
+    before = str(fortran_src)
+    for old, new in logical_operators:
+        after = before.replace(old, (' %s ' % new))
+        before = after
+
+    return after
+
+
 def main(fortran_filename):
     fortran_src = read_text_content(fortran_filename)
+
+    fortran_src = replace_logical_operators(fortran_src)
 
     fortran_lines = fortran_src.splitlines()
 
@@ -51,7 +74,7 @@ def main(fortran_filename):
 
 def split_symbols(fortran_line):
     # # http://stackoverflow.com/questions/1059559/python-split-strings-with-multiple-delimiters
-    python_line = re.findall(r"[\w=\.\(\)']+", fortran_line)
+    python_line = re.findall(r"[\w=\.\(\)*\[\]']+", fortran_line)
     return python_line
 
 

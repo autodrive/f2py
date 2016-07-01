@@ -1,6 +1,6 @@
 import unittest
 
-import fortran_info as fi
+import slycot_conversion.fortran_info as fi
 
 
 class TestFortranInfo(unittest.TestCase):

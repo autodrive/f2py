@@ -1,7 +1,7 @@
 import os
 import unittest
 
-import find_slycot
+import slycot_conversion.find_slycot
 
 
 class TestFindSlycotFindFunctionsUsed(unittest.TestCase):
@@ -26,12 +26,12 @@ class TestFindSlycotFindFunctionsUsed(unittest.TestCase):
                             '..\\control\\tests': {
                                 'slycot_convert_test.py': [(56, '        from slycot import tb04ad, td04ad'),
                                                            (115, '        from slycot import tb04ad, td04ad')]}}
-        self.f = find_slycot.FindFunctionNamesFromImport(self.result_dict)
+        self.f = slycot_conversion.find_slycot.FindFunctionNamesFromImport(self.result_dict)
 
     def test_main_python(self):
-        pardir = os.path.abspath(os.pardir)
-        r = find_slycot.RecursiveFinder(pardir)
-        f = find_slycot.FindFunctionNamesFromImport(r.result)
+        pardir = os.path.abspath(os.path.join(os.pardir, os.pardir))
+        r = slycot_conversion.find_slycot.RecursiveFinder(pardir)
+        f = slycot_conversion.find_slycot.FindFunctionNamesFromImport(r.result)
         result = f.find_function_names()
         expected = {'ab09ad': [('control', 'modelsimp.py', 256)],
                     'sb01bd': [('control', 'statefbk.py', 76)],
@@ -376,7 +376,7 @@ class TestFindSlycotFindFunctionUsedFortran(unittest.TestCase):
                          (330, "         CALL TB01ID( 'A', N, M, P, MAXRED, A, LDA, B, LDB, C, LDC,"),
                          (338, '      CALL TB01WD( N, M, P, A, LDA, B, LDB, C, LDC, DWORK(KT), N,'),
                          (349, '      CALL AB09AX( DICO, JOB, ORDSEL, N, M, P, NR, A, LDA, B, LDB, C,')]}}
-        self.f = find_slycot.FindFunctionUsedFortran(self.result_dict)
+        self.f = slycot_conversion.find_slycot.FindFunctionUsedFortran(self.result_dict)
 
     def test_handle_file(self):
         args = ('SB04MD.f', "         CALL XERBLA( 'SB04MD', -INFO )", 196,

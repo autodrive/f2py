@@ -33,9 +33,13 @@ def main(fortran_filename):
     python_lines = []
 
     # line loop
-    for fortran_line in fortran_lines:
+    for k, fortran_line in enumerate(fortran_lines):
         if fortran_info.is_comment(fortran_line):
             python_line = '#' + fortran_line[1:]
+        elif fortran_info.is_continue_previous_line(fortran_line):
+            last_line = python_lines.pop()
+            python_lines.append(last_line + '\\')
+            python_line = fortran_line[:5] + ' ' + fortran_line[7:]
         else:
             python_line = fortran_line
         python_lines.append(python_line)

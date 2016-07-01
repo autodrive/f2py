@@ -3,6 +3,8 @@ convert fortran file to python if there is no go to
 """
 import os
 
+import fortran_info
+
 
 def read_text_content(filename):
     f = open(filename, 'rt')
@@ -10,12 +12,6 @@ def read_text_content(filename):
     f.close()
 
     return txt
-
-
-def is_comment(fortran_line):
-    whitespace = (' ', '\t')  # '\t' rarely used in .f files
-    result = not (fortran_line[0] in whitespace)
-    return result
 
 
 def fortran_filename_to_python_filename(fortran_filename):
@@ -38,7 +34,7 @@ def main(fortran_filename):
 
     # line loop
     for fortran_line in fortran_lines:
-        if is_comment(fortran_line):
+        if fortran_info.is_comment(fortran_line):
             python_line = '#' + fortran_line[1:]
         else:
             python_line = fortran_line

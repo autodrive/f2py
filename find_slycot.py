@@ -7,6 +7,8 @@ import os
 import re
 from pprint import pprint
 
+import fortran_info
+
 
 def pwd():
     """
@@ -266,7 +268,7 @@ class FindFunctionUsedFortran(FindFunctionNamesFromImport):
         -------
 
         """
-        return 'C' == line[1 - 1]
+        return fortran_info.is_comment(line)
 
     def handle_file(self, filename, line, line_number, path):
         """

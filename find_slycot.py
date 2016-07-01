@@ -335,13 +335,22 @@ def main():
         print(function_name.lower()[:-2])
     print("end go to or goto ".ljust(60, '*'))
 
+    # find goto lines from Fortran source codes recursively visiting sub-folders
+    find_in_tree(function_tuple, '\t')
+
 
 def find_in_tree(function_tuple, pattern_string):
     fortran_go_to = RecursiveFinderFortran(function_list=function_tuple, pattern=pattern_string)
-    print(("with %s " % pattern_string).ljust(60, '#'))
-    pprint(fortran_go_to.result)
-    fortran_go_to_set = set(fortran_go_to.result.values()[0].keys())
-    print(("end with %s to " % pattern_string).ljust(60, '*'))
+    print(("with %r " % pattern_string).ljust(60, '#'))
+
+    if fortran_go_to.result.values():
+        pprint(fortran_go_to.result)
+        fortran_go_to_set = set(fortran_go_to.result.values()[0].keys())
+    else:
+        print('%r not found' % pattern_string)
+        fortran_go_to_set = set()
+
+    print(("end with %r to " % pattern_string).ljust(60, '*'))
     return fortran_go_to_set
 
 

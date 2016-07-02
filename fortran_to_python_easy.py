@@ -69,8 +69,23 @@ def replace_else_if(fortran_src):
     return after
 
 
+def replace_continue(fortran_src):
+    # https://docs.python.org/2/howto/regex.html
+    # http://stackoverflow.com/questions/6116978/python-replace-multiple-strings
+
+    r = re.compile(r'(?P<label>\d+)\s+(?P<keyword>CONTINUE)')
+    # 20 CONTINUE
+    # match.group('label') == 20
+
+    after = r.sub(lambda m: '# end_for %s' % m.group('label'), fortran_src)
+
+    # print(after)
+
+    return after
+
+
 def replace_two_word_keywords(fortran_src):
-    # # https://docs.python.org/2/howto/regex.html
+    # https://docs.python.org/2/howto/regex.html
     # http://stackoverflow.com/questions/6116978/python-replace-multiple-strings
     replace_these = {
         ' END IF\n': ' # end_if\n',
@@ -113,6 +128,8 @@ def replace_word(fortran_word):
         'DO': 'for',
         'IF': 'if',
         'THEN': ':',
+        'ELSE': 'else:',
+        'END': '# end of subroutine',
     }
     return python_word[fortran_word]
 

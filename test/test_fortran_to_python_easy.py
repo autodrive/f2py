@@ -120,6 +120,47 @@ C
         result = f2pe.replace_two_word_keywords(code)
         self.assertEqual(expected, result)
 
+    def test_replace_continue(self):
+        code = '''
+                 RNORM = DLANSY( '1-norm', UPLO, M, R, LDR, DWORK )
+                 CALL DCOPY( M, R, LDR+1, DWORK, 1 )
+                 IF( LUPLOU ) THEN
+        C
+                    DO 20 J = 2, M
+                       CALL DCOPY( J-1, R(1,J), 1, R(J,1), LDR )
+           20       CONTINUE
+        C
+                 ELSE
+        C
+                    DO 40 J = 2, M
+                       CALL DCOPY( J-1, R(J,1), LDR, R(1,J), 1 )
+           40       CONTINUE
+        C
+                 END IF
+                 CALL DPOTRF( UPLO, M, R, LDR, INFO )
+        '''
+
+        expected = '''
+                 RNORM = DLANSY( '1-norm', UPLO, M, R, LDR, DWORK )
+                 CALL DCOPY( M, R, LDR+1, DWORK, 1 )
+                 IF( LUPLOU ) THEN
+        C
+                    DO 20 J = 2, M
+                       CALL DCOPY( J-1, R(1,J), 1, R(J,1), LDR )
+           # end_for 20
+        C
+                 ELSE
+        C
+                    DO 40 J = 2, M
+                       CALL DCOPY( J-1, R(J,1), LDR, R(1,J), 1 )
+           # end_for 40
+        C
+                 END IF
+                 CALL DPOTRF( UPLO, M, R, LDR, INFO )
+        '''
+        result = f2pe.replace_continue(code)
+        self.assertEqual(expected, result)
+
 
 if __name__ == '__main__':
     unittest.main()

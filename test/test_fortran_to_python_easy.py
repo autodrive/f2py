@@ -22,6 +22,32 @@ class TestFortranToPythonEasy(unittest.TestCase):
         result = f2pe.replace_logical_operators(fortran_code)
         self.assertEqual(expected, result)
 
+    def test_replace_else_if_00(self):
+        code = '''      IF( .NOT.LJOBG .AND. .NOT.LSAME( JOBG, 'N' ) ) THEN
+         INFO = -1
+      ELSE IF( .NOT.LJOBL .AND. .NOT.LSAME( JOBL, 'Z' ) ) THEN'''
+
+        expected = '''      IF( .NOT.LJOBG .AND. .NOT.LSAME( JOBG, 'N' ) ) THEN
+         INFO = -1
+      elif ( .NOT.LJOBL .AND. .NOT.LSAME( JOBL, 'Z' ) ) THEN'''
+
+        result = f2pe.replace_else_if(code)
+
+        self.assertEqual(expected, result)
+
+    def test_replace_else_if_01(self):
+        code = '''      IF( .NOT.LJOBG .AND. .NOT.LSAME( JOBG, 'N' ) ) THEN
+         INFO = -1
+      ELSE IF ( .NOT.LJOBL .AND. .NOT.LSAME( JOBL, 'Z' ) ) THEN'''
+
+        expected = '''      IF( .NOT.LJOBG .AND. .NOT.LSAME( JOBG, 'N' ) ) THEN
+         INFO = -1
+      elif ( .NOT.LJOBL .AND. .NOT.LSAME( JOBL, 'Z' ) ) THEN'''
+
+        result = f2pe.replace_else_if(code)
+
+        self.assertEqual(expected, result)
+
 
 if __name__ == '__main__':
     unittest.main()

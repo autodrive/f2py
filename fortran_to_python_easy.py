@@ -51,6 +51,17 @@ def replace_symbol(fortran_src):
     return replace_loop(fortran_src, logical_operators, ' ')
 
 
+def replace_else_if(fortran_src):
+    # https://docs.python.org/2/howto/regex.html#regex-howto
+    # http://stackoverflow.com/questions/6116978/python-replace-multiple-strings
+    r = re.compile(r'\s(ELSE\sIF)\s')
+    after = r.sub(' elif ', fortran_src)
+
+    # print(after)
+
+    return after
+
+
 def replace_two_word_keywords(fortran_src):
     # http://stackoverflow.com/questions/6116978/python-replace-multiple-strings
     replace_these = {

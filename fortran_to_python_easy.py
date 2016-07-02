@@ -117,6 +117,42 @@ def replace_word(fortran_word):
     return python_word[fortran_word]
 
 
+def indent_logic(python_line_list_split, tabstop=4):
+    # TODO : check consistency of keywords : python or Fortran?
+    # TODO : One line if
+    # TODO : replace continue
+
+    increase_next = {'SUBROUTINE', 'IF', 'DO'}
+    decrease_next = {'end_if', 'CONTINUE'}
+    decrease_itself = {'SUBROUTINE', 'elif', 'ELSE', 'end_if', 'CONTINUE', 'END'}
+
+    next_indent = 0
+
+    stack = []
+
+    for line in python_line_list_split:
+        if '#' != line[0]:
+            indent = next_indent
+            for word in line:
+                if word in decrease_itself:
+                    indent = max((0, indent - tabstop))
+
+                if word in increase_next:
+                    next_indent = indent + tabstop
+                    break
+                elif word in decrease_next:
+                    next_indent = indent
+                    break
+
+            if indent < 0:
+                indent = 0
+            elif indent > 100:
+                raise Exception('indent > 100')
+
+            line.insert(0, ' ' * indent)
+    # end of indent loop
+
+
 def main(fortran_filename, b_include_fortran=True):
     fortran_src = read_text_content(fortran_filename)
 
@@ -150,6 +186,8 @@ def main(fortran_filename, b_include_fortran=True):
                 python_lines.append('#' + fortran_line)
             python_lines.append(python_line)
 
+    indent_logic(python_lines)
+
     # write file
     python_filename = fortran_filename_to_python_filename(fortran_filename)
     write_python_file(python_filename, python_lines)
@@ -158,7 +196,7 @@ def main(fortran_filename, b_include_fortran=True):
 def split_symbols(fortran_line):
     # http://stackoverflow.com/questions/1059559/python-split-strings-with-multiple-delimiters
     # https://docs.python.org/2/library/re.html#re.escape
-    symbols = re.escape('=.()*+-/<>!')
+    symbols = re.escape('=.()*+-/<>!:')
     python_line = re.findall(r"[\w%s']+"%symbols, fortran_line)
     return python_line
 

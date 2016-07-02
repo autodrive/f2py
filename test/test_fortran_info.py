@@ -589,7 +589,7 @@ class TestFortranInfo(unittest.TestCase):
                       ('      END', False), }
         for fortran_line, expected in test_cases:
             result = fi.is_comment(fortran_line)
-            self.assertEqual(result, expected)
+            self.assertEqual(expected, result)
 
     def test_is_continue(self):
         test_cases = {('      SUBROUTINE SB02MT( JOBG, JOBL, FACT, UPLO, N, M, A, LDA, B, LDB,', False),
@@ -1178,4 +1178,4 @@ class TestFortranInfo(unittest.TestCase):
         for fortran_line, expected in test_cases:
             result = fi.is_continue_previous_line(fortran_line)
             message = 'fortran_line = %r, expected %r, result %r' % (fortran_line, expected, result)
-            self.assertEqual(result, expected, msg=message)
+            self.assertEqual(expected, result, msg=message)

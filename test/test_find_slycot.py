@@ -64,7 +64,7 @@ class TestFindSlycotFindFunctionsUsed(unittest.TestCase):
         self.assertSetEqual(expected_key_set, result_key_set)
 
         for key in expected_key_set:
-            self.assertSequenceEqual(result[key], expected[key])
+            self.assertSequenceEqual(expected[key], result[key])
 
     def test_find_function_names_from_import(self):
         arg_result_tuple = (
@@ -97,7 +97,7 @@ class TestFindSlycotFindFunctionsUsed(unittest.TestCase):
         )
 
         for arg, expected in arg_result_tuple:
-            self.assertEqual(self.f.find_function_names_from_import(arg), expected)
+            self.assertEqual(expected, self.f.find_function_names_from_import(arg))
 
     def test_handle_file4(self):
         args4 = ('yottalab.py',
@@ -106,7 +106,7 @@ class TestFindSlycotFindFunctionsUsed(unittest.TestCase):
                  os.path.join('..', 'control', 'tests'))
         self.f.handle_file(*args4)
         expected = {'sb02od': [('..\\control\\tests', 'yottalab.py', 28)]}
-        self.assertSequenceEqual(self.f.function_names, expected)
+        self.assertSequenceEqual(expected, self.f.function_names)
 
     def test_handle_file5(self):
         args5 = ('slycot_convert_test.py',
@@ -116,7 +116,7 @@ class TestFindSlycotFindFunctionsUsed(unittest.TestCase):
         self.f.handle_file(*args5)
         expected = {'td04ad': [('..\\control\\tests', 'slycot_convert_test.py', 115)],
                     'tb04ad': [('..\\control\\tests', 'slycot_convert_test.py', 115)]}
-        self.assertSequenceEqual(self.f.function_names, expected)
+        self.assertSequenceEqual(expected, self.f.function_names)
 
 
 class TestFindSlycotFindFunctionUsedFortran(unittest.TestCase):
@@ -642,7 +642,7 @@ class TestFindSlycotFindFunctionUsedFortran(unittest.TestCase):
                              ('      CALL AB09AX( DICO, JOB, ORDSEL, N, M, P, NR, A, LDA, B, LDB, C,', 'ab09ax'),
                              )
         for line, expected in line_result_tuple:
-            self.assertAlmostEqual(self.f.find_function_name_from_call_line(line), expected)
+            self.assertAlmostEqual(expected, self.f.find_function_name_from_call_line(line))
 
 
 if __name__ == '__main__':

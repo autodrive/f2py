@@ -1179,3 +1179,51 @@ class TestFortranInfo(unittest.TestCase):
             result = fi.is_continue_previous_line(fortran_line)
             message = 'fortran_line = %r, expected %r, result %r' % (fortran_line, expected, result)
             self.assertEqual(expected, result, msg=message)
+
+    def test_search_else_if_00(self):
+        code = '''      IF( .NOT.LJOBG .AND. .NOT.LSAME( JOBG, 'N' ) ) THEN
+            INFO = -1
+         ELSE IF( .NOT.LJOBL .AND. .NOT.LSAME( JOBL, 'Z' ) ) THEN'''
+
+        result = fi.search_else_if(code)
+        expected = code.index(' ELSE')
+
+        # print('%r' % result.group(0))
+
+        self.assertEqual(expected, result.start(0))
+
+    def test_search_else_if_01(self):
+        code = '''      IF( .NOT.LJOBG .AND. .NOT.LSAME( JOBG, 'N' ) ) THEN
+            INFO = -1
+         ELSE IF ( .NOT.LJOBL .AND. .NOT.LSAME( JOBL, 'Z' ) ) THEN'''
+
+        result = fi.search_else_if(code)
+        expected = code.index(' ELSE')
+
+        # print('%r' % result.group(0))
+
+        self.assertEqual(expected, result.start(0))
+
+    def test_search_else_if_02(self):
+        code = '''      IF( .NOT.LJOBG .AND. .NOT.LSAME( JOBG, 'N' ) ) THEN
+            INFO = -1
+         sELSE IF( .NOT.LJOBL .AND. .NOT.LSAME( JOBL, 'Z' ) ) THEN'''
+
+        result = fi.search_else_if(code)
+        expected = None
+
+        # print('%r' % result.group(0))
+
+        self.assertEqual(expected, result)
+
+    def test_search_else_if_03(self):
+        code = '''      IF( .NOT.LJOBG .AND. .NOT.LSAME( JOBG, 'N' ) ) THEN
+            INFO = -1
+         ELSE IFs( .NOT.LJOBL .AND. .NOT.LSAME( JOBL, 'Z' ) ) THEN'''
+
+        result = fi.search_else_if(code)
+        expected = None
+
+        # print('%r' % result.group(0))
+
+        self.assertEqual(expected, result)

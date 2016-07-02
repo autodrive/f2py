@@ -51,6 +51,22 @@ def replace_symbol(fortran_src):
     return replace_loop(fortran_src, logical_operators, ' ')
 
 
+def replace_two_word_keywords(fortran_src):
+    # http://stackoverflow.com/questions/6116978/python-replace-multiple-strings
+    replace_these = {
+        r'\sEND\sIF\s': ' # end_if ',
+        r'\s(ELSE\sIF)[\s\(]': ' # elif ',
+    }
+
+    replace_dict = dict((re.escape(k), v) for k, v in replace_these.iteritems())
+    pattern = re.compile("|".join(replace_dict.keys()))
+    after = pattern.sub(lambda m: replace_dict[re.escape(m.group(0))], fortran_src)
+
+    print(after)
+
+    return after
+
+
 def undo_replace_symbol(fortran_src):
     logical_operators = (
         (' ( ', '('),
@@ -88,7 +104,9 @@ def main(fortran_filename, b_include_fortran=True):
     fortran_src_symbol_replaced = replace_symbol(fortran_src_logic_replaced)
     del fortran_src_logic_replaced
 
-    fortran_lines = fortran_src_symbol_replaced.splitlines()
+    fortran_src_keywords_replaced = replace_two_word_keywords(fortran_src_symbol_replaced)
+
+    fortran_lines = fortran_src_keywords_replaced.splitlines()
     del fortran_src_symbol_replaced
 
     python_lines = []

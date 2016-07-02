@@ -77,6 +77,7 @@ def replace_two_word_keywords(fortran_src):
         r' ELSE IF(': ' elif (',
         r' ELSE IF ': ' elif ',
     }
+    # check indent_logic()
 
     replace_dict = dict((re.escape(k), v) for k, v in replace_these.items())
     pattern = re.compile("|".join(replace_dict.keys()))
@@ -99,6 +100,7 @@ def undo_replace_symbol(fortran_src):
 def replace_loop(fortran_src, pairs, separator=''):
 
     before = str(fortran_src)
+    after = fortran_src
     for old, new in pairs:
         after = before.replace(old, ('%s%s%s' % (separator, new, separator)))
         before = after
@@ -154,8 +156,10 @@ def main(fortran_filename, b_include_fortran=True):
 
 
 def split_symbols(fortran_line):
-    # # http://stackoverflow.com/questions/1059559/python-split-strings-with-multiple-delimiters
-    python_line = re.findall(r"[\w=\.\(\)*\[\]']+", fortran_line)
+    # http://stackoverflow.com/questions/1059559/python-split-strings-with-multiple-delimiters
+    # https://docs.python.org/2/library/re.html#re.escape
+    symbols = re.escape('=.()*+-/<>!')
+    python_line = re.findall(r"[\w%s']+"%symbols, fortran_line)
     return python_line
 
 

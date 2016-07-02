@@ -54,8 +54,15 @@ def replace_symbol(fortran_src):
 def replace_else_if(fortran_src):
     # https://docs.python.org/2/howto/regex.html#regex-howto
     # http://stackoverflow.com/questions/6116978/python-replace-multiple-strings
-    r = re.compile(r'\s(ELSE\sIF)\s')
-    after = r.sub(' elif ', fortran_src)
+
+    replace_these = {
+        ' ELSE IF ': ' elif ',
+        ' ELSE IF(': ' elif (',
+    }
+
+    replace_keys_these = dict((re.escape(k), v) for k, v in replace_these.items())
+    r = re.compile("|".join(replace_keys_these.keys()))
+    after = r.sub(lambda m: replace_keys_these[re.escape(m.group(0))], fortran_src)
 
     # print(after)
 
@@ -69,7 +76,7 @@ def replace_two_word_keywords(fortran_src):
         r'\s(ELSE\sIF)[\s\(]': ' # elif ',
     }
 
-    replace_dict = dict((re.escape(k), v) for k, v in replace_these.iteritems())
+    replace_dict = dict((re.escape(k), v) for k, v in replace_these.items())
     pattern = re.compile("|".join(replace_dict.keys()))
     after = pattern.sub(lambda m: replace_dict[re.escape(m.group(0))], fortran_src)
 

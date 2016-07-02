@@ -27,6 +27,13 @@ def search_else_if(fortran_code):
     return r.search(fortran_code)
 
 
+def search_continue(fortran_code):
+    pattern = r'(?P<label>\d+)\s+(?P<keyword>CONTINUE)'
+
+    r = re.compile(pattern)
+    return r.search(fortran_code)
+
+
 def list_externals(fortran_code):
     fortran_lines = fortran_code.splitlines()
 

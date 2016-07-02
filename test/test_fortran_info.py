@@ -1227,3 +1227,28 @@ class TestFortranInfo(unittest.TestCase):
         # print('%r' % result.group(0))
 
         self.assertEqual(expected, result)
+
+    def test_search_continue(self):
+        code = '''
+         RNORM = DLANSY( '1-norm', UPLO, M, R, LDR, DWORK )
+         CALL DCOPY( M, R, LDR+1, DWORK, 1 )
+         IF( LUPLOU ) THEN
+C
+            DO 20 J = 2, M
+               CALL DCOPY( J-1, R(1,J), 1, R(J,1), LDR )
+   20       CONTINUE
+C
+         ELSE
+C
+            DO 40 J = 2, M
+               CALL DCOPY( J-1, R(J,1), LDR, R(1,J), 1 )
+   40       CONTINUE
+C
+         END IF
+         CALL DPOTRF( UPLO, M, R, LDR, INFO )
+'''
+        result = fi.search_continue(code)
+        self.assertTrue(result)
+        # print(result.group(0))
+        # print(result.group('label'))
+        # print(result.group('keyword'))

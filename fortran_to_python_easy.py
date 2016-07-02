@@ -52,7 +52,7 @@ def replace_symbol(fortran_src):
 
 
 def replace_else_if(fortran_src):
-    # https://docs.python.org/2/howto/regex.html#regex-howto
+    # https://docs.python.org/2/howto/regex.html
     # http://stackoverflow.com/questions/6116978/python-replace-multiple-strings
 
     replace_these = {
@@ -70,17 +70,19 @@ def replace_else_if(fortran_src):
 
 
 def replace_two_word_keywords(fortran_src):
+    # # https://docs.python.org/2/howto/regex.html
     # http://stackoverflow.com/questions/6116978/python-replace-multiple-strings
     replace_these = {
-        r'\sEND\sIF\s': ' # end_if ',
-        r'\s(ELSE\sIF)[\s\(]': ' # elif ',
+        ' END IF\n': ' # end_if\n',
+        r' ELSE IF(': ' elif (',
+        r' ELSE IF ': ' elif ',
     }
 
     replace_dict = dict((re.escape(k), v) for k, v in replace_these.items())
     pattern = re.compile("|".join(replace_dict.keys()))
     after = pattern.sub(lambda m: replace_dict[re.escape(m.group(0))], fortran_src)
 
-    print(after)
+    # print(after)
 
     return after
 

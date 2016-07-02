@@ -48,6 +48,78 @@ class TestFortranToPythonEasy(unittest.TestCase):
 
         self.assertEqual(expected, result)
 
+    def test_replace_two_word_keywords(self):
+        code = '''C
+C     Test the input scalar arguments.
+C
+      IF( .NOT.LJOBG .AND. .NOT.LSAME( JOBG, 'N' ) ) THEN
+         INFO = -1
+      ELSE IF( .NOT.LJOBL .AND. .NOT.LSAME( JOBL, 'Z' ) ) THEN
+         INFO = -2
+      sELSE IF( .NOT.LFACTA .AND. .NOT.LSAME( FACT, 'N' ) ) THEN
+         INFO = -3
+      ELSE IFs( .NOT.LUPLOU .AND. .NOT.LSAME( UPLO, 'L' ) ) THEN
+         INFO = -4
+      ELSE IF( N.LT.0 ) THEN
+         INFO = -5
+      ELSE IF( M.LT.0 ) THEN
+         INFO = -6
+      ELSE IF( ( LDA.LT.1 ) .OR. ( LJOBL .AND. LDA.LT.N ) ) THEN
+         INFO = -8
+      ELSE IF( LDB.LT.MAX( 1, N ) ) THEN
+         INFO = -10
+      ELSE IF( ( LDQ.LT.1 ) .OR. ( LJOBL .AND. LDQ.LT.N ) ) THEN
+         INFO = -12
+      ELSE IF( LDR.LT.MAX( 1, M ) ) THEN
+         INFO = -14
+      ELSE IF ( ( LDL.LT.1 ) .OR. ( LJOBL .AND. LDL.LT.N ) ) THEN
+         INFO = -16
+      ELSE IF ( ( LDG.LT.1 ) .OR. ( LJOBG .AND. LDG.LT.N ) ) THEN
+         INFO = -20
+      ELSE IF( ( LFACTC .AND. LDWORK.LT.1 ) .OR.
+     $         ( LFACTU .AND. LDWORK.LT.MAX( 1, N*M ) ) .OR.
+     $    ( .NOT.LFACTA .AND. LDWORK.LT.MAX( 2, N*M, 3*M ) ) ) THEN
+         INFO = -23
+      END IF
+C
+'''
+        expected = '''C
+C     Test the input scalar arguments.
+C
+      IF( .NOT.LJOBG .AND. .NOT.LSAME( JOBG, 'N' ) ) THEN
+         INFO = -1
+      elif ( .NOT.LJOBL .AND. .NOT.LSAME( JOBL, 'Z' ) ) THEN
+         INFO = -2
+      sELSE IF( .NOT.LFACTA .AND. .NOT.LSAME( FACT, 'N' ) ) THEN
+         INFO = -3
+      ELSE IFs( .NOT.LUPLOU .AND. .NOT.LSAME( UPLO, 'L' ) ) THEN
+         INFO = -4
+      elif ( N.LT.0 ) THEN
+         INFO = -5
+      elif ( M.LT.0 ) THEN
+         INFO = -6
+      elif ( ( LDA.LT.1 ) .OR. ( LJOBL .AND. LDA.LT.N ) ) THEN
+         INFO = -8
+      elif ( LDB.LT.MAX( 1, N ) ) THEN
+         INFO = -10
+      elif ( ( LDQ.LT.1 ) .OR. ( LJOBL .AND. LDQ.LT.N ) ) THEN
+         INFO = -12
+      elif ( LDR.LT.MAX( 1, M ) ) THEN
+         INFO = -14
+      elif ( ( LDL.LT.1 ) .OR. ( LJOBL .AND. LDL.LT.N ) ) THEN
+         INFO = -16
+      elif ( ( LDG.LT.1 ) .OR. ( LJOBG .AND. LDG.LT.N ) ) THEN
+         INFO = -20
+      elif ( ( LFACTC .AND. LDWORK.LT.1 ) .OR.
+     $         ( LFACTU .AND. LDWORK.LT.MAX( 1, N*M ) ) .OR.
+     $    ( .NOT.LFACTA .AND. LDWORK.LT.MAX( 2, N*M, 3*M ) ) ) THEN
+         INFO = -23
+      # end_if
+C
+'''
+        result = f2pe.replace_two_word_keywords(code)
+        self.assertEqual(expected, result)
+
 
 if __name__ == '__main__':
     unittest.main()

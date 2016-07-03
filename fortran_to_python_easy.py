@@ -134,7 +134,7 @@ def replace_word(fortran_word):
     return python_word[fortran_word]
 
 
-def indent_logic(python_line_list_split, tabstop=4):
+def indent_logic(python_line_list_split, tab_stop=4):
     # TODO : check consistency of keywords : python or Fortran?
     # TODO : One line if
     # TODO : replace continue
@@ -152,12 +152,16 @@ def indent_logic(python_line_list_split, tabstop=4):
             indent = next_indent
             for word in line:
                 if word in decrease_itself:
-                    indent = max((0, indent - tabstop))
+                    indent = max((0, indent - tab_stop))
 
                 if word in increase_next:
-                    next_indent = indent + tabstop
+                    stack.append(list(line))
+                    next_indent = indent + tab_stop
                     break
                 elif word in decrease_next:
+                    append_this = stack.pop()
+                    append_this.insert(0, '#')
+                    line.append(append_this)
                     next_indent = indent
                     break
 
@@ -166,7 +170,8 @@ def indent_logic(python_line_list_split, tabstop=4):
             elif indent > 100:
                 raise Exception('indent > 100')
 
-            line.insert(0, ' ' * indent)
+            format_string = '%' + str(indent) + 'd'
+            line.insert(0, format_string % len(stack))
     # end of indent loop
 
 

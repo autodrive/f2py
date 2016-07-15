@@ -83,6 +83,8 @@ class RecursiveFinder(object):
         abs_initial_path = os.path.abspath(initial_path)
         self.b_rel_path = b_rel_path
 
+        self.ignore_if_folder_parts_include = ('.git', '.idea', 'build', 'slycot_conversion')
+
         if not os.path.exists(abs_initial_path):
             raise IOError('File does not exist: %s' % abs_initial_path)
         elif not os.path.isdir(abs_initial_path):
@@ -96,19 +98,21 @@ class RecursiveFinder(object):
         """destructor"""
         os.chdir(self.abs_return_path)
 
+    def is_path_to_ignore(self, path):
+        path_parts = path.split(os.sep)
+        check_list = map(lambda folder_part_to_ignore: folder_part_to_ignore in path_parts,
+                         self.ignore_if_folder_parts_include)
+        return any(check_list)
+
     def walker(self):
-        for root, dirs, files in os.walk(self.abs_initial_path):
-            # TODO : list of folders to ignore
-            if ('.git' not in root) \
-                    and ('.idea' not in root)\
-                    and ('\\build\\' not in root)\
-                    and ('slycot_conversion' not in root):
-                folder_list = self.process_folder(root, files)
+        for path, dirs, files in os.walk(self.abs_initial_path):
+            if not self.is_path_to_ignore(path):
+                folder_list = self.process_folder(path, files)
                 if folder_list:
                     if self.b_rel_path:
-                        key = os.path.relpath(root, self.abs_initial_path)
+                        key = os.path.relpath(path, self.abs_initial_path)
                     else:
-                        key = root
+                        key = path
                     self.result[key] = folder_list
 
     def process_folder(self, root, files):

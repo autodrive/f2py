@@ -29,7 +29,7 @@ class TestFindSlycotFindFunctionsUsed(unittest.TestCase):
         self.f = find_slycot.FindFunctionNamesFromImport(self.result_dict)
 
     def test_main_python(self):
-        pardir = os.path.abspath(os.pardir)
+        pardir = os.path.abspath(os.path.join(os.pardir, os.pardir))
         r = find_slycot.RecursiveFinder(pardir)
         f = find_slycot.FindFunctionNamesFromImport(r.result)
         result = f.find_function_names()

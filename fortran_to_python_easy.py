@@ -131,7 +131,13 @@ def undo_replace_symbol(fortran_src):
 
 
 def replace_loop(fortran_src, pairs, separator=''):
+    """
 
+    :param fortran_src:str
+    :param pairs:list or tuple of tuples
+    :param separator:str
+    :return:str
+    """
     before = str(fortran_src)
     after = fortran_src
     for old, new in pairs:

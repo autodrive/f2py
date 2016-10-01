@@ -177,4 +177,7 @@ class TestFortranToPythonReDeclarationLines(unittest.TestCase):
                                        {'name': "Q", 'type': "DOUBLE PRECISION", "dim": '(LDQ,*)'},
                                        {'name': "R", 'type': "DOUBLE PRECISION", "dim": '(LDR,*)'}, ]
 
+        maxDiff_backup = self.maxDiff
+        self.maxDiff = 1024
         self.assertSequenceEqual(expected_variable_info_list, parsed_variable_info_list)
+        self.maxDiff = maxDiff_backup

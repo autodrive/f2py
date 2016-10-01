@@ -146,6 +146,11 @@ def replace_loop(fortran_src, pairs, separator=''):
 
 
 def replace_word(fortran_word):
+    """
+    apply lookup tables of 1:1 keywords
+    :param fortran_word:
+    :return:
+    """
     python_word = {
         'SUBROUTINE': 'def',
         'DO': 'for',

@@ -17,12 +17,18 @@ def replace_fortran_comments_to_python(txt):
     return comment_replaced_txt
 
 
+def replace_fortran_dollar6_to_python(txt):
+    dollar6_replaced_txt = re.sub(pattern=r'\n\s{5}[^\s]\s+', repl=' ', string=txt, flags=re.MULTILINE)
+    return dollar6_replaced_txt
+
+
 def main(fortran_filename):
     fortran_src = read_text_content(fortran_filename)
 
     comment_replaced_src = replace_fortran_comments_to_python(fortran_src)
+    dollar6_replaced_src = replace_fortran_dollar6_to_python(comment_replaced_src)
 
-    print(comment_replaced_src)
+    print(dollar6_replaced_src)
 
 
 if __name__ == '__main__':

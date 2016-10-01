@@ -20,7 +20,7 @@ def fortran_filename_to_python_filename(fortran_filename):
     ***.f or ***.for -> ***.py
 
     :type fortran_filename: str
-    :return: string
+    :return: str
     """
     return ''.join((os.path.splitext(fortran_filename)[0].lower(), '.py'))
 

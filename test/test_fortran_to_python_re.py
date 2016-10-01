@@ -133,11 +133,15 @@ class TestFortranToPythonReDeclarationLines(unittest.TestCase):
 '''
 
     def test_find_type_variable_names_character(self):
-        variable_names_found = set(f2pr.find_type_variable_names(self.fortran_example, 'CHARACTER'))
+        variable_info_list = f2pr.find_type_variable_names(self.fortran_example, 'CHARACTER')
 
-        expected_set = set(('FACT', 'JOBG', 'JOBL', 'UPLO', 'TRANS',))
+        expected_tuple = ({'name': 'FACT', 'type': 'CHARACTER'},
+                          {'name': 'JOBG', 'type': 'CHARACTER'},
+                          {'name': 'JOBL', 'type': 'CHARACTER'},
+                          {'name': 'UPLO', 'type': 'CHARACTER'},
+                          {'name': 'TRANS', 'type': 'CHARACTER'})
 
-        self.assertSetEqual(expected_set, variable_names_found)
+        self.assertSequenceEqual(expected_tuple, variable_info_list)
 
     def te_st_find_type_variable_names_double_precision(self):
         variable_names_found = set(f2pr.find_type_variable_names(self.fortran_example, 'DOUBLE PRECISION'))

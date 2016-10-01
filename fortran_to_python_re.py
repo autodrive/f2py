@@ -83,10 +83,13 @@ def find_type_variable_names(fortran_source_txt, type_name):
     variable_names = []
     for variable_line in variable_lines:
         # split variable_line with word bounds
-        variable_names_in_line = re.split(r"\s|,", variable_line)
+
+        parser = FortranVariableDeclarationParser(variable_line, type_name)
+
+        variable_info_list = parser.parse()
 
         # add variable names found in one line to the big list
-        variable_names += variable_names_in_line
+        variable_names += variable_info_list
 
     # TODO : can we do it with one line
 

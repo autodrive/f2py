@@ -80,8 +80,10 @@ C      Finished
 
         self.assertEqual(expected_replaced_txt, comments_replaced_txt)
 
-    def test_find_type_variable_names(self):
-        fortran_example = '''#
+
+class TestFortranToPythonReDeclarationLines(unittest.TestCase):
+    def setUp(self):
+        self.fortran_example = '''#
 #     .. Parameters ..
       DOUBLE PRECISION  ZERO, ONE
       PARAMETER         ( ZERO = 0.0D0, ONE = 1.0D0 )
@@ -129,8 +131,21 @@ C      Finished
       ELSE IF( M.LT.0 ) THEN
          INFO = -6
 '''
-        variable_names_found = set(f2pr.find_type_variable_names(fortran_example, 'CHARACTER'))
+
+    def test_find_type_variable_names_character(self):
+        variable_names_found = set(f2pr.find_type_variable_names(self.fortran_example, 'CHARACTER'))
 
         expected_set = set(('FACT', 'JOBG', 'JOBL', 'UPLO', 'TRANS',))
+
+        self.assertSetEqual(expected_set, variable_names_found)
+
+    def test_find_type_variable_names_double_precision(self):
+        variable_names_found = set(f2pr.find_type_variable_names(self.fortran_example, 'DOUBLE PRECISION'))
+
+        expected_set = set(('ZERO', 'ONE',
+                            'A', 'B', 'DWORK', 'G', 'L', 'Q', 'R',
+                            'EPS', 'RCOND', 'RNORM',
+                            'DLAMCH', 'DLANSY',
+                            ))
 
         self.assertSetEqual(expected_set, variable_names_found)

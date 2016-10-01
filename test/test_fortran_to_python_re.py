@@ -53,7 +53,7 @@ C      Finished
         exp, res = item
         return self.assertEqual(exp, res)
 
-    def test_replace_fortran_dollar6_to_python(self):
+    def test_replace_fortran_continue_to_next_line_to_python(self):
         fortran_example = '''      SUBROUTINE SB02MT( JOBG, JOBL, FACT, UPLO, N, M, A, LDA, B, LDB,
      $                   Q, LDQ, R, LDR, L, LDL, IPIV, OUFACT, G, LDG,
      $                   IWORK, DWORK, LDWORK, INFO )
@@ -61,7 +61,7 @@ C      Finished
 #     SLICOT RELEASE 5.0.
 '''
 
-        comments_replaced_txt = f2pr.replace_fortran_dollar6_to_python(fortran_example)
+        comments_replaced_txt = f2pr.replace_fortran_continue_to_next_line_to_python(fortran_example)
 
         expected_replaced_txt = '''      SUBROUTINE SB02MT( JOBG, JOBL, FACT, UPLO, N, M, A, LDA, B, LDB, Q, LDQ, R, LDR, L, LDL, IPIV, OUFACT, G, LDG, IWORK, DWORK, LDWORK, INFO )
 #

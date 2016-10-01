@@ -30,7 +30,17 @@ class FortranVariableDeclarationParser:
         self.location = 0
         self.variable_info_list = []
 
+        self.splitter = re.compile(r"[\w%s']+" % re.escape('=.()*+-/<>!:'))
+
+    def split_symbols(self):
+        # http://stackoverflow.com/questions/1059559/python-split-strings-with-multiple-delimiters
+        # https://docs.python.org/2/library/re.html#re.escape
+
+        # split fortran line using delimiters as above
+        return self.splitter.findall(self.declaration_txt)
+
     def parse(self):
+        self.variable_info_list = self.split_symbols()
         while len(self.declaration_txt) > self.location:
             self.location += 1
 

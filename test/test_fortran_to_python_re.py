@@ -139,7 +139,7 @@ class TestFortranToPythonReDeclarationLines(unittest.TestCase):
 
         self.assertSetEqual(expected_set, variable_names_found)
 
-    def test_find_type_variable_names_double_precision(self):
+    def te_st_find_type_variable_names_double_precision(self):
         variable_names_found = set(f2pr.find_type_variable_names(self.fortran_example, 'DOUBLE PRECISION'))
 
         expected_set = set(('ZERO', 'ONE',

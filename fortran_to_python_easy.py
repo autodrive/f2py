@@ -30,7 +30,7 @@ def write_python_file(python_filename, python_lines):
     write a list of python script lines into a text file
 
     :type python_filename:str
-    :type python_lines:[list, tuple]
+    :type python_lines:list, tuple
     :rtype: None
     """
     f = open(python_filename, 'wt')
@@ -40,6 +40,11 @@ def write_python_file(python_filename, python_lines):
 
 
 def replace_logical_operators(fortran_src):
+    """
+    apply logical_operators tuple pair
+    :param fortran_src:str
+    :return:str
+    """
     logical_operators = (
         ('.EQ.', '=='),
         ('.NE.', '!='),

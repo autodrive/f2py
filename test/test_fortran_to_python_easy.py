@@ -8,6 +8,13 @@ class TestFortranToPythonEasy(unittest.TestCase):
     def setUp(self):
         self.filename = os.path.join(os.pardir, 'pyslicot', 'SB02MT.f')
 
+    def test_split_symbols(self):
+        fortran_line = '      SUBROUTINE SB02MT (  JOBG, JOBL, FACT, UPLO, N, M, A, LDA, B, LDB,'
+        split_symbols_list = f2pe.split_symbols(fortran_line)
+        expected_split_symbols_list = ['SUBROUTINE', 'SB02MT', '(', 'JOBG', 'JOBL', 'FACT', 'UPLO', 'N', 'M', 'A',
+                                       'LDA', 'B', 'LDB']
+        self.assertSequenceEqual(expected_split_symbols_list, split_symbols_list)
+
     def test_fortran_filename_to_python_filename(self):
         fortran_filename = 'SB02MT.f'
         result = f2pe.fortran_filename_to_python_filename(fortran_filename)

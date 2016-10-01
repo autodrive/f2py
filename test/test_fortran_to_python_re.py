@@ -79,3 +79,58 @@ C      Finished
         )
 
         self.assertEqual(expected_replaced_txt, comments_replaced_txt)
+
+    def test_find_type_variable_names(self):
+        fortran_example = '''#
+#     .. Parameters ..
+      DOUBLE PRECISION  ZERO, ONE
+      PARAMETER         ( ZERO = 0.0D0, ONE = 1.0D0 )
+#     .. Scalar Arguments ..
+      CHARACTER         FACT, JOBG, JOBL, UPLO
+      INTEGER           INFO, LDA, LDB, LDG, LDL, LDQ, LDR, LDWORK, M, N, OUFACT
+#     .. Array Arguments ..
+      INTEGER           IPIV(*), IWORK(*)
+      DOUBLE PRECISION  A(LDA,*), B(LDB,*), DWORK(*), G(LDG,*), L(LDL,*), Q(LDQ,*), R(LDR,*)
+#     .. Local Scalars ..
+      LOGICAL           LFACTA, LFACTC, LFACTU, LJOBG, LJOBL, LUPLOU
+      CHARACTER         TRANS
+      INTEGER           I, J, WRKOPT
+      DOUBLE PRECISION  EPS, RCOND, RNORM
+#     .. External Functions ..
+      LOGICAL           LSAME
+      DOUBLE PRECISION  DLAMCH, DLANSY
+      EXTERNAL          DLAMCH, DLANSY, LSAME
+#     .. External Subroutines ..
+      EXTERNAL          DCOPY, DGEMM, DGEMV, DPOCON, DPOTRF, DSYCON, DSYRK, DSYTRF, DSYTRS, DTRSM, XERBLA
+#     .. Intrinsic Functions ..
+      INTRINSIC         INT, MAX
+#     .. Executable Statements ..
+#
+      INFO   = 0
+      LJOBG  = LSAME( JOBG, 'G' )
+      LJOBL  = LSAME( JOBL, 'N' )
+      LFACTC = LSAME( FACT, 'C' )
+      LFACTU = LSAME( FACT, 'U' )
+      LUPLOU = LSAME( UPLO, 'U' )
+      LFACTA = LFACTC.OR.LFACTU
+#
+#     Test the input scalar arguments.
+#
+      IF( .NOT.LJOBG .AND. .NOT.LSAME( JOBG, 'N' ) ) THEN
+         INFO = -1
+      ELSE IF( .NOT.LJOBL .AND. .NOT.LSAME( JOBL, 'Z' ) ) THEN
+         INFO = -2
+      ELSE IF( .NOT.LFACTA .AND. .NOT.LSAME( FACT, 'N' ) ) THEN
+         INFO = -3
+      ELSE IF( .NOT.LUPLOU .AND. .NOT.LSAME( UPLO, 'L' ) ) THEN
+         INFO = -4
+      ELSE IF( N.LT.0 ) THEN
+         INFO = -5
+      ELSE IF( M.LT.0 ) THEN
+         INFO = -6
+'''
+        variable_names_found = set(f2pr.find_type_variable_names(fortran_example, 'CHARACTER'))
+
+        expected_set = set(('FACT', 'JOBG', 'JOBL', 'UPLO', 'TRANS',))
+
+        self.assertSetEqual(expected_set, variable_names_found)

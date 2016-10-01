@@ -22,6 +22,10 @@ def replace_fortran_continue_to_next_line_to_python(txt):
     return dollar6_replaced_txt
 
 
+def find_type_variable_names(txt, type_name):
+    return tuple()
+
+
 def main(fortran_filename):
     fortran_src = read_text_content(fortran_filename)
 

@@ -2,14 +2,19 @@
 convert fortran file to python if there is no go to
 """
 import os
+import re
 
 
 def read_text_content(filename):
     f = open(filename, 'rt')
     txt = f.read()
     f.close()
-
     return txt
+
+
+def replace_fortran_comments_to_python(txt):
+    comment_replaced_txt = re.sub(pattern='^[^\s]', repl='#', string=txt, flags=re.MULTILINE)
+    return comment_replaced_txt
 
 
 def main(fortran_filename):

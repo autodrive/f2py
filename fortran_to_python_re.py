@@ -22,9 +22,15 @@ def replace_fortran_continue_to_next_line_to_python(txt):
     return dollar6_replaced_txt
 
 
-def find_type_variable_names(txt, type_name):
-    # lines starting with type name
-    variable_lines = re.findall(r'^\s{6}%s\s+(.+)' % type_name, txt, flags=re.MULTILINE)
+def find_type_variable_names(fortran_source_txt, type_name):
+    """
+    Detect variable declarations
+    :param fortran_source_txt: str Fortran source code
+    :param type_name: str e.g., CHARACTER, DOUBLE PRECISION, ...
+    :return:tuple of variable name strings
+    """
+    # lines starting with type name :
+    variable_lines = re.findall(r'^\s{6}%s\s+(.+)' % type_name, fortran_source_txt, flags=re.MULTILINE)
 
     variable_names = []
     for variable_line in variable_lines:

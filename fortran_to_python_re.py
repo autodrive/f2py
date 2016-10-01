@@ -42,9 +42,30 @@ class FortranVariableDeclarationParser:
         return self.splitter.findall(self.declaration_txt)
 
     def parse(self):
-        self.variable_info_list = self.split_symbols()
-        while len(self.declaration_txt) > self.location:
-            self.location += 1
+        split_list = self.split_symbols()
+        # initial key
+        key = 'name'
+        # for each variable
+        var_info_dict = {}
+        # dimension queue : for array variable dimensions
+        dim_q = []
+
+        while split_list:
+            symbol = split_list.pop(0)
+            if 'name' == key:
+                if '(' == symbol:
+                    key = 'dim'
+                    dim_q = []
+                else:
+                    var_info_dict = {'name': symbol, 'type': self.type_name}
+                    self.variable_info_list.append(var_info_dict)
+            elif 'dim' == key:
+                if ')' == symbol:
+                    dim_string = ','.join(dim_q)
+                    var_info_dict['dim'] = '(' + dim_string + ')'
+                    key = 'name'
+                else:
+                    dim_q.append(symbol)
 
         return self.variable_info_list
 

@@ -18,7 +18,7 @@ def main(fortran_filename):
 
 
 if __name__ == '__main__':
-    args = os.path.join('..', 'pyslicot', 'SB02MT.f')
+    args = os.path.join(os.pardir, 'pyslicot', 'SB02MT.f')
     from sys import argv
 
     if 1 < len(argv):

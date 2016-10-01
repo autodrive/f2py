@@ -26,6 +26,8 @@ class FortranVariableDeclarationParser:
     def __init__(self, variable_declaration_txt, type_name):
         self.type_name = type_name
         self.declaration_txt = variable_declaration_txt
+        self.declaration_txt = self.declaration_txt.replace('(', ' ( ')
+        self.declaration_txt = self.declaration_txt.replace(')', ' ) ')
 
         self.location = 0
         self.variable_info_list = []

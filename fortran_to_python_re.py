@@ -35,7 +35,7 @@ def find_type_variable_names(fortran_source_txt, type_name):
     variable_names = []
     for variable_line in variable_lines:
         # split variable_line with word bounds
-        variable_names_in_line = re.findall(r"[\w]+", variable_line)
+        variable_names_in_line = re.split(r"\s|,", variable_line)
 
         # add variable names found in one line to the big list
         variable_names += variable_names_in_line

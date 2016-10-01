@@ -22,6 +22,21 @@ def replace_fortran_continue_to_next_line_to_python(txt):
     return dollar6_replaced_txt
 
 
+class FortranVariableDeclarationParser:
+    def __init__(self, variable_declaration_txt, type_name):
+        self.type_name = type_name
+        self.declaration_txt = variable_declaration_txt
+
+        self.location = 0
+        self.variable_info_list = []
+
+    def parse(self):
+        while len(self.declaration_txt) > self.location:
+            self.location += 1
+
+        return self.variable_info_list
+
+
 def find_type_variable_names(fortran_source_txt, type_name):
     """
     Detect variable declarations

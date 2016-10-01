@@ -149,3 +149,32 @@ class TestFortranToPythonReDeclarationLines(unittest.TestCase):
                             ))
 
         self.assertSetEqual(expected_set, variable_names_found)
+
+    def test_FortranVariableDeclarationParserChar(self):
+        parser = f2pr.FortranVariableDeclarationParser('FACT, JOBG, JOBL, UPLO', 'CHARACTER')
+
+        parsed_variable_info_list = parser.parse()
+
+        expected_variable_info_list = [{'name': "FACT", 'type': "CHARACTER"},
+                                       {'name': "JOBG", 'type': "CHARACTER"},
+                                       {'name': "JOBL", 'type': "CHARACTER"},
+                                       {'name': "UPLO", 'type': "CHARACTER"}, ]
+
+        self.assertSequenceEqual(expected_variable_info_list, parsed_variable_info_list)
+
+    def test_FortranVariableDeclarationParserDouble(self):
+        parser = f2pr.FortranVariableDeclarationParser(
+            'A(LDA,*), B(LDB,*), DWORK(*), G(LDG,*), L(LDL,*), Q(LDQ,*), R(LDR,*)',
+            'DOUBLE PRECISION')
+
+        parsed_variable_info_list = parser.parse()
+
+        expected_variable_info_list = [{'name': "A", 'type': "DOUBLE PRECISION", "dim": '(LDA,*)'},
+                                       {'name': "B", 'type': "DOUBLE PRECISION", "dim": '(LDB,*)'},
+                                       {'name': "DWORK", 'type': "DOUBLE PRECISION", "dim": '(*)'},
+                                       {'name': "G", 'type': "DOUBLE PRECISION", "dim": '(LDG,*)'},
+                                       {'name': "L", 'type': "DOUBLE PRECISION", "dim": '(LDL,*)'},
+                                       {'name': "Q", 'type': "DOUBLE PRECISION", "dim": '(LDQ,*)'},
+                                       {'name': "R", 'type': "DOUBLE PRECISION", "dim": '(LDR,*)'}, ]
+
+        self.assertSequenceEqual(expected_variable_info_list, parsed_variable_info_list)

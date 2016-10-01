@@ -8,9 +8,8 @@ import fortran_info
 
 
 def read_text_content(filename):
-    f = open(filename, 'rt')
-    txt = f.read()
-    f.close()
+    with open(filename, 'rt') as f:
+        txt = f.read()
 
     return txt
 

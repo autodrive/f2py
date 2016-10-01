@@ -246,8 +246,8 @@ def main(fortran_filename, b_include_fortran=True):
 def split_symbols(fortran_line):
     # http://stackoverflow.com/questions/1059559/python-split-strings-with-multiple-delimiters
     # https://docs.python.org/2/library/re.html#re.escape
-    symbols = re.escape('=.()*+-/<>!:')
-    python_line = re.findall(r"[\w%s']+"%symbols, fortran_line)
+    delimiters = re.escape('=.()*+-/<>!:')
+    python_line = re.findall(r"[\w%s']+" % delimiters, fortran_line)
     return python_line
 
 

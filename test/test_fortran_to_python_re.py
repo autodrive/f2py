@@ -1,6 +1,7 @@
-import unittest
-import fortran_to_python_re as f2pr
 import itertools
+import unittest
+
+import fortran_to_python_re as f2pr
 
 
 class TestFortranToPythonRe(unittest.TestCase):
@@ -41,8 +42,13 @@ C      Finished
 #      Finished
 #       expression analyzer'''
 
-        expected_list = expected_replaced_txt.splitlines()
-        replaced_list = comments_replaced_txt.splitlines()
+        self.assertLongStringEqual(comments_replaced_txt, expected_replaced_txt)
 
-        for exp, res in itertools.izip(expected_list, replaced_list):
-            self.assertEqual(exp, res)
+    def assertLongStringEqual(self, expected, result):
+        expected_list = result.splitlines()
+        replaced_list = expected.splitlines()
+        return map(self.assertLongStringEqualHelper, itertools.izip(expected_list, replaced_list))
+
+    def assertLongStringEqualHelper(self, item):
+        exp, res = item
+        return self.assertEqual(exp, res)

@@ -45,6 +45,12 @@ C      Finished
         self.assertLongStringEqual(comments_replaced_txt, expected_replaced_txt)
 
     def assertLongStringEqual(self, expected, result):
+        """
+        For same number of lines
+        :param expected:
+        :param result:
+        :return:
+        """
         expected_list = result.splitlines()
         replaced_list = expected.splitlines()
         return map(self.assertLongStringEqualHelper, itertools.izip(expected_list, replaced_list))

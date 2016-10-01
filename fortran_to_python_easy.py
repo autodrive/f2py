@@ -26,6 +26,13 @@ def fortran_filename_to_python_filename(fortran_filename):
 
 
 def write_python_file(python_filename, python_lines):
+    """
+    write a list of python script lines into a text file
+
+    :type python_filename:str
+    :type python_lines:[list, tuple]
+    :rtype: None
+    """
     f = open(python_filename, 'wt')
     for python_line in python_lines:
         f.write('%s\n' % python_line)

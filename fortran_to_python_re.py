@@ -23,7 +23,9 @@ def replace_fortran_continue_to_next_line_to_python(txt):
 
 
 def find_type_variable_names(txt, type_name):
-    return tuple()
+    # variable_lines = re.findall(r'^\s{6}%s\s+([^\s]+)' % type_name, txt)
+    variable_lines = re.findall(r'^\s{6}%s\s+([^\s]+)' % type_name, txt, flags=re.MULTILINE)
+    return tuple(variable_lines)
 
 
 def main(fortran_filename):

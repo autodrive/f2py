@@ -19,7 +19,10 @@ def replace_fortran_comments_to_python(txt):
 
 def main(fortran_filename):
     fortran_src = read_text_content(fortran_filename)
-    print(fortran_src)
+
+    comment_replaced_src = replace_fortran_comments_to_python(fortran_src)
+
+    print(comment_replaced_src)
 
 
 if __name__ == '__main__':

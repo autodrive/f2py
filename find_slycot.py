@@ -128,9 +128,8 @@ class RecursiveFinder(object):
         result = []
 
         if os.path.splitext(file_name)[-1] == self.extension:
-            f = open(file_name, 'r')
-            txt = f.read()
-            f.close()
+            with open(file_name, 'r') as f:
+                txt = f.read()
 
             lines = txt.splitlines()
 

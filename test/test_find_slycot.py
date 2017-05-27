@@ -27,6 +27,10 @@ class TestFindSlycotFindFunctionsUsed(unittest.TestCase):
                                 'slycot_convert_test.py': [(56, '        from slycot import tb04ad, td04ad'),
                                                            (115, '        from slycot import tb04ad, td04ad')]}}
         self.f = find_slycot.FindFunctionNamesFromImport(self.result_dict)
+        self.maxDiff_backup = self.maxDiff
+
+    def tearDown(self):
+        self.maxDiff = self.maxDiff_backup
 
     def test_main_python(self):
         pardir = os.path.abspath(os.path.join(os.pardir, os.pardir))

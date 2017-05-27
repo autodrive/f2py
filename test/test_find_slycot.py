@@ -109,8 +109,8 @@ class TestFindSlycotFindFunctionsUsed(unittest.TestCase):
                  28,
                  os.path.join('..', 'control', 'tests'))
         self.f.handle_file(*args4)
-        expected = {'sb02od': [('..\\control\\tests', 'yottalab.py', 28)]}
-        self.assertSequenceEqual(self.f.function_names, expected)
+        expected = {'sb02od': [(os.path.join(os.pardir, 'control', 'tests'), 'yottalab.py', 28)]}
+        self.assertDictEqual(self.f.function_names, expected)
 
     def test_handle_file5(self):
         args5 = ('slycot_convert_test.py',

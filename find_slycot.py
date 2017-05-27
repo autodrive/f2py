@@ -14,7 +14,7 @@ def pwd():
     -------
     absolute path to current working directory
     """
-    return os.path.abspath(os.curdir)
+    return os.getcwd()
 
 
 def get_first_script_parameter():

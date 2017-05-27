@@ -118,9 +118,9 @@ class TestFindSlycotFindFunctionsUsed(unittest.TestCase):
                  115,
                  os.path.join('..', 'control', 'tests'))
         self.f.handle_file(*args5)
-        expected = {'td04ad': [('..\\control\\tests', 'slycot_convert_test.py', 115)],
-                    'tb04ad': [('..\\control\\tests', 'slycot_convert_test.py', 115)]}
-        self.assertSequenceEqual(self.f.function_names, expected)
+        expected = {'td04ad': [(os.path.join(os.pardir, 'control', 'tests'), 'slycot_convert_test.py', 115)],
+                    'tb04ad': [(os.path.join(os.pardir, 'control', 'tests'), 'slycot_convert_test.py', 115)]}
+        self.assertDictEqual(self.f.function_names, expected)
 
 
 class TestFindSlycotFindFunctionUsedFortran(unittest.TestCase):

@@ -40,24 +40,11 @@ C      Finished
 #      PRINT *, N!       Debug comment & EoL comment
        ...
 #      Finished
-#       expression analyzer'''
+#       expression analyzer
+'''
 
-        self.assertLongStringEqual(comments_replaced_txt, expected_replaced_txt)
-
-    def assertLongStringEqual(self, expected, result):
-        """
-        For same number of lines
-        :param expected:
-        :param result:
-        :return:
-        """
-        expected_list = result.splitlines()
-        replaced_list = expected.splitlines()
-        return map(self.assertLongStringEqualHelper, itertools.izip(expected_list, replaced_list))
-
-    def assertLongStringEqualHelper(self, item):
-        exp, res = item
-        return self.assertEqual(exp, res)
+        self.maxDiff = None
+        self.assertEqual(comments_replaced_txt, expected_replaced_txt)
 
     def test_replace_fortran_continue_to_next_line_to_python(self):
         fortran_example = '''      SUBROUTINE SB02MT( JOBG, JOBL, FACT, UPLO, N, M, A, LDA, B, LDB,

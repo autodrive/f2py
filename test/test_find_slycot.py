@@ -53,11 +53,11 @@ class TestFindSlycotFindFunctionsUsed(unittest.TestCase):
                     'sg03ad': [('control', 'mateqn.py', 193), ('control', 'mateqn.py', 268)],
                     'tb01pd': [('control', 'statesp.py', 480)],
                     'tb04ad': [('control', 'xferfcn.py', 1092),
-                               ('control\\tests', 'slycot_convert_test.py', 56),
-                               ('control\\tests', 'slycot_convert_test.py', 115)],
+                               (os.path.join('control', 'tests'), 'slycot_convert_test.py', 56),
+                               (os.path.join('control', 'tests'), 'slycot_convert_test.py', 115)],
                     'td04ad': [('control', 'statesp.py', 646),
-                               ('control\\tests', 'slycot_convert_test.py', 56),
-                               ('control\\tests', 'slycot_convert_test.py', 115)]}
+                               (os.path.join('control', 'tests'), 'slycot_convert_test.py', 56),
+                               (os.path.join('control', 'tests'), 'slycot_convert_test.py', 115)]}
 
         expected_key_set = set(expected.keys())
         result_key_set = set(result.keys())

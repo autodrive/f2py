@@ -382,7 +382,7 @@ class TestFindSlycotFindFunctionUsedFortran(unittest.TestCase):
         args = ('SB04MD.f', "         CALL XERBLA( 'SB04MD', -INFO )", 196,
                 os.path.join('..', '..', 'slycot', 'slycot', 'src'))
         self.f.handle_file(*args)
-        expected = [('slycot\\src', 'SB04MD.f', 196)]
+        expected = [(os.path.join('slycot', 'src'), 'SB04MD.f', 196)]
         self.assertSequenceEqual(expected, self.f.function_names['xerbla'])
 
     def test_find_function_name_from_call_line(self):

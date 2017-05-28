@@ -60,6 +60,17 @@ def replace_logical_operators(fortran_src):
 
 
 def replace_symbol(fortran_src):
+    """
+    Insert separator ' ' before and after '(' and ')'
+
+    Parameters
+    ----------
+    fortran_src
+
+    Returns
+    -------
+
+    """
     logical_operators = (
         ('(', '('),
         (')', ')'),
@@ -132,9 +143,9 @@ def undo_replace_symbol(fortran_src):
 def replace_loop(fortran_src, pairs, separator=''):
     """
 
-    :param fortran_src:str
-    :param pairs:list or tuple of tuples
-    :param separator:str
+    :param str fortran_src:
+    :param list(tuple) | tuple(tuple) pairs:
+    :param str separator:
     :return:str
     """
     before = str(fortran_src)

@@ -187,14 +187,15 @@ def decide_indent_level(python_line_list_split, tab_stop=4):
 
     indent_stack = []
     for line_list in python_line_list_split:
+        b_pushed = False
         if line_list[0] in push_dict:
             indent_stack.append(line_list[0])
             b_pushed = True
-        elif (indent_stack) and (line_list[0] in push_dict[indent_stack[-1]]['pop']):
-            indent_stack.pop()
-            b_pushed = False
-        else:
-            b_pushed = False
+        elif indent_stack:
+            if line_list[0] in push_dict[indent_stack[-1]]['pop']:
+                indent_stack.pop()
+            elif line_list[0] in push_dict[indent_stack[-1]]['passing']:
+                b_pushed = True
 
         if isinstance(line_list, list):
             if b_pushed:

@@ -177,9 +177,10 @@ def replace_word(fortran_word):
 
 
 def decide_indent_level(python_line_list_split, tab_stop=4):
-    push_dict = {'SUBROUTINE': {'end'},
-                 'IF': {'end_if'},
-                 'DO': {'CONTINUE'},
+    push_dict = {'SUBROUTINE': {'pop': {'end'}},
+                 'IF': {'pop': {'end_if'},
+                        'passing': {'elif', 'ELSE'}},
+                 'DO': {'pop': {'CONTINUE'}},
                  }
 
     indent_stack = []
@@ -187,7 +188,7 @@ def decide_indent_level(python_line_list_split, tab_stop=4):
         if line_list[0] in push_dict:
             indent_stack.append(line_list[0])
             b_pushed = True
-        elif (indent_stack) and (line_list[0] in push_dict[indent_stack[-1]]):
+        elif (indent_stack) and (line_list[0] in push_dict[indent_stack[-1]]['pop']):
             indent_stack.pop()
             b_pushed = False
         else:

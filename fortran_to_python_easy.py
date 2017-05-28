@@ -190,9 +190,10 @@ def indent_logic(python_line_list_split, tab_stop=4):
     stack = []
 
     for line in python_line_list_split:
-        logger.info('indent_logic(): top : %r' % (line))
-        logger.info('indent_logic(): top : %r' % (stack))
         if '#' != line[0]:
+            logger.info('indent_logic(): line : %r' % (line))
+            logger.info('indent_logic(): top : %r' % (stack))
+
             indent = next_indent
             for word in line:
                 if word in decrease_itself:

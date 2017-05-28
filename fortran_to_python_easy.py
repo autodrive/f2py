@@ -217,12 +217,15 @@ def indent_logic(python_line_list_split, tab_stop=4):
 def main(fortran_filename, b_include_fortran=True):
     fortran_src = read_text_content(fortran_filename)
 
+    # >, <, ==, !=, ...
     fortran_src_logic_replaced = replace_logical_operators(fortran_src)
     del fortran_src
 
+    #  ')' --> ' ) '
     fortran_src_symbol_replaced = replace_symbol(fortran_src_logic_replaced)
     del fortran_src_logic_replaced
 
+    # end if, else if
     fortran_src_keywords_replaced = replace_two_word_keywords(fortran_src_symbol_replaced)
 
     fortran_lines = fortran_src_keywords_replaced.splitlines()
@@ -238,6 +241,7 @@ def main(fortran_filename, b_include_fortran=True):
             del python_line
             python_lines.append(python_line_undo)
         else:
+            # if 6th column is not white space
             if fortran_info.is_continue_previous_line(fortran_line):
                 last_line = python_lines.pop()
                 python_line = last_line + split_symbols(fortran_line)

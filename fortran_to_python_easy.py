@@ -279,6 +279,7 @@ def split_symbols(fortran_line):
 
 
 if __name__ == '__main__':
+    logger.info('start program '.ljust(60, '='))
     from sys import argv
     try:
         main(argv[1])
@@ -286,3 +287,4 @@ if __name__ == '__main__':
         msg = "Try to convert fortran file to python if there is no go to\n" \
             '$ python %s [path to a fortran file]' % os.path.split(__file__)[-1]
         print(msg)
+    logger.info('end program '.ljust(60, '='))

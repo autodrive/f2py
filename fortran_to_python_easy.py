@@ -176,7 +176,34 @@ def replace_word(fortran_word):
     return python_word[fortran_word]
 
 
-def indent_logic(python_line_list_split, tab_stop=4):
+def decide_indent_level(python_line_list_split, tab_stop=4):
+    push_dict = {'SUBROUTINE': {'end'},
+                 'IF': {'end_if'},
+                 'DO': {'CONTINUE'},
+                 }
+
+    indent_stack = []
+    for line_list in python_line_list_split:
+        if line_list[0] in push_dict:
+            indent_stack.append(line_list[0])
+            b_pushed = True
+        elif (indent_stack) and (line_list[0] in push_dict[indent_stack[-1]]):
+            indent_stack.pop()
+            b_pushed = False
+        else:
+            b_pushed = False
+
+        if isinstance(line_list, list):
+            if b_pushed:
+                indent = len(indent_stack) - 1
+            else:
+                indent = len(indent_stack)
+
+            format_string = '%' + str(indent * tab_stop) + 'd'
+            line_list.insert(0, format_string % indent)
+
+
+def indent_logic_prev(python_line_list_split, tab_stop=4):
     # TODO : check consistency of keywords : python or Fortran?
     # TODO : One line if
     # TODO : replace continue
@@ -259,7 +286,7 @@ def main(fortran_filename, b_include_fortran=True):
                 python_lines.append('#' + fortran_line_str)
             python_lines.append(python_line)
 
-    indent_logic(python_lines)
+    decide_indent_level(python_lines)
 
     # write file
     python_filename = fortran_filename_to_python_filename(fortran_filename)

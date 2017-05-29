@@ -298,6 +298,7 @@ def main(fortran_filename, b_include_fortran=True):
     for k, fortran_line in enumerate(fortran_lines):
         fortran_line_str = str(fortran_line)
         if fortran_info.is_comment(fortran_line_str):
+            # mark comment lines
             python_line = '#' + fortran_line_str[1:]
             python_line_undo = undo_replace_symbol(python_line)
             del python_line

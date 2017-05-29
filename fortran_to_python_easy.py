@@ -172,6 +172,11 @@ def replace_word(fortran_word):
         'THEN': ':',
         'ELSE': 'else:',
         'END': '# end of subroutine',
+        'RETURN': 'return',
+        'CALL': '',  # call a subroutine
+        'CONTINUE': '# continue',
+    # placeholder for a label https://docs.oracle.com/cd/E19957-01/805-4939/6j4m0vn83/index.html
+        'end_if': '# end_if',
     }
     return python_word[fortran_word]
 

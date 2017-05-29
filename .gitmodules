@@ -1,0 +1,3 @@
+[submodule "logger"]
+	path = logger
+	url = https://autodrive@gist.github.com/994f2af2d5baf601e65667bebbcd7fb1.git

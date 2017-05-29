@@ -83,7 +83,7 @@ class RecursiveFinder(object):
         abs_initial_path = os.path.abspath(initial_path)
         self.b_rel_path = b_rel_path
 
-        self.ignore_if_folder_parts_include = ('.git', '.idea', 'build', 'slycot_conversion')
+        self.ignore_if_folder_parts_include = ('.git', '.idea', 'build', 'f2py')
 
         if not os.path.exists(abs_initial_path):
             raise IOError('File does not exist: %s' % abs_initial_path)
@@ -134,9 +134,12 @@ class RecursiveFinder(object):
         result = []
 
         if os.path.splitext(file_name)[-1] == self.extension:
-            f = open(file_name, 'r')
-            txt = f.read()
-            f.close()
+            try:
+                with open(file_name, 'r') as f:
+                    txt = f.read()
+            except UnicodeDecodeError:
+                with open(file_name, 'r', encoding='utf-8') as f:
+                    txt = f.read()
 
             lines = txt.splitlines()
 

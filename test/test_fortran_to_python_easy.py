@@ -1,7 +1,7 @@
 import os
 import unittest
 
-import slycot_conversion.fortran_to_python_easy as f2pe
+import fortran_to_python_easy as f2pe
 
 
 class TestFortranToPythonEasy(unittest.TestCase):

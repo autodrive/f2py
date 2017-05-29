@@ -176,6 +176,22 @@ def replace_word(fortran_word):
     return python_word[fortran_word]
 
 
+def get_first_word(line_list):
+    """
+    To handle [label] CONTINUE correctly
+    
+    :param list(str) line_list: 
+    :return: 
+    """
+    result = ''
+    for word in line_list:
+        if not word.isdigit():
+            result = word
+            break
+
+    return result
+
+
 def decide_indent_level(python_line_list_split, tab_stop=4):
     push_dict = {'SUBROUTINE': {'pop': {'end'},
                                 'passing': set()},
@@ -188,13 +204,14 @@ def decide_indent_level(python_line_list_split, tab_stop=4):
     indent_stack = []
     for line_list in python_line_list_split:
         b_pushed = False
-        if line_list[0] in push_dict:
-            indent_stack.append(line_list[0])
+        word = get_first_word(line_list)
+        if word in push_dict:
+            indent_stack.append(word)
             b_pushed = True
         elif indent_stack:
-            if line_list[0] in push_dict[indent_stack[-1]]['pop']:
+            if word in push_dict[indent_stack[-1]]['pop']:
                 indent_stack.pop()
-            elif line_list[0] in push_dict[indent_stack[-1]]['passing']:
+            elif word in push_dict[indent_stack[-1]]['passing']:
                 b_pushed = True
 
         if isinstance(line_list, list):

@@ -277,9 +277,10 @@ def split_symbols(fortran_line):
 
 
 if __name__ == '__main__':
-    args = os.path.join(os.pardir, 'pyslicot', 'SB02MT.f')
     from sys import argv
-
-    if 1 < len(argv):
-        args = argv[1]
-    main(args)
+    try:
+        main(argv[1])
+    except IndexError:
+        msg = "Try to convert fortran file to python if there is no go to\n" \
+            '$ python %s [path to a fortran file]' % os.path.split(__file__)[-1]
+        print(msg)

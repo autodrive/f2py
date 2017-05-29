@@ -241,20 +241,21 @@ def main(fortran_filename, b_include_fortran=True):
 
     # line loop
     for k, fortran_line in enumerate(fortran_lines):
-        if fortran_info.is_comment(fortran_line):
-            python_line = '#' + fortran_line[1:]
+        fortran_line_str = str(fortran_line)
+        if fortran_info.is_comment(fortran_line_str):
+            python_line = '#' + fortran_line_str[1:]
             python_line_undo = undo_replace_symbol(python_line)
             del python_line
             python_lines.append(python_line_undo)
         else:
             # if 6th column is not white space
-            if fortran_info.is_continue_previous_line(fortran_line):
+            if fortran_info.is_continue_previous_line(fortran_line_str):
                 last_line = python_lines.pop()
-                python_line = last_line + split_symbols(fortran_line)
+                python_line = last_line + split_symbols(fortran_line_str)
             else:
-                python_line = split_symbols(fortran_line)
+                python_line = split_symbols(fortran_line_str)
             if b_include_fortran:
-                python_lines.append('#' + fortran_line)
+                python_lines.append('#' + fortran_line_str)
             python_lines.append(python_line)
 
     indent_logic(python_lines)

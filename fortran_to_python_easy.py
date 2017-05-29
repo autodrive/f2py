@@ -205,7 +205,13 @@ def decide_indent_level(python_line_list_split, tab_stop=4):
     for line_list in python_line_list_split:
         b_pushed = False
         word = get_first_word(line_list)
-        if word in push_dict:
+
+        if 'IF' == word:
+            # to handle one-line if lines correctly
+            if 'THEN' == line_list[-1]:
+                b_pushed = True
+                indent_stack.append(word)
+        elif word in push_dict:
             indent_stack.append(word)
             b_pushed = True
         elif indent_stack:

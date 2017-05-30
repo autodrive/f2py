@@ -1,10 +1,6 @@
 import os
-import sys
 import unittest
 
-print(os.path.abspath(os.curdir))
-
-sys.path.append(os.path.abspath(os.path.join(os.pardir)))
 import find_slycot
 
 
@@ -63,7 +59,7 @@ class TestFindSlycotFindFunctionsUsed(unittest.TestCase):
         )
 
         for arg, expected in arg_result_tuple:
-            self.assertEqual(expected, self.f.find_function_names_from_import(arg))
+            self.assertEqual(self.f.find_function_names_from_import(arg), expected)
 
     def test_handle_file4(self):
         args4 = ('yottalab.py',
@@ -608,7 +604,7 @@ class TestFindSlycotFindFunctionUsedFortran(unittest.TestCase):
                              ('      CALL AB09AX( DICO, JOB, ORDSEL, N, M, P, NR, A, LDA, B, LDB, C,', 'ab09ax'),
                              )
         for line, expected in line_result_tuple:
-            self.assertAlmostEqual(expected, self.f.find_function_name_from_call_line(line))
+            self.assertAlmostEqual(self.f.find_function_name_from_call_line(line), expected)
 
 
 if __name__ == '__main__':

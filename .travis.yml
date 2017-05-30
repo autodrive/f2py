@@ -1,0 +1,10 @@
+language: python
+python:
+    - 2.7
+    - 3.5
+before_install:
+    - export PYTHONPATH="$(pwd)/logger:$PYTHONPATH"
+install:
+    - echo $PYTHONPATH
+script:
+    python -m unittest discover

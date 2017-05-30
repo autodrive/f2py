@@ -235,51 +235,6 @@ def decide_indent_level(python_line_list_split, tab_stop=4):
             line_list.insert(0, format_string % indent)
 
 
-def indent_logic_prev(python_line_list_split, tab_stop=4):
-    # TODO : check consistency of keywords : python or Fortran?
-    # TODO : One line if
-    # TODO : replace continue
-
-    increase_next = {'SUBROUTINE', 'IF', 'DO'}
-    decrease_next = {'end_if', 'CONTINUE'}
-    decrease_itself = {'SUBROUTINE', 'elif', 'ELSE', 'end_if', 'CONTINUE', 'END'}
-
-    next_indent = 0
-
-    stack = []
-
-    for line in python_line_list_split:
-        if '#' != line[0]:
-            logger.info('indent_logic(): line : %r' % (line))
-            logger.info('indent_logic(): top : %r' % (stack))
-
-            indent = next_indent
-            for word in line:
-                if word in decrease_itself:
-                    indent = max((0, indent - tab_stop))
-
-                if word in increase_next:
-                    stack.append(list(line))
-                    next_indent = indent + tab_stop
-                    break
-                elif word in decrease_next:
-                    append_this = stack.pop()
-                    append_this.insert(0, '#')
-                    line.append(append_this)
-                    next_indent = indent
-                    break
-
-            if indent < 0:
-                indent = 0
-            elif indent > 100:
-                raise Exception('indent > 100')
-
-            format_string = '%' + str(indent) + 'd'
-            line.insert(0, format_string % len(stack))
-        logger.info('indent_logic(): bottom : %r' % (stack))
-    # end of indent loop
-
-
 def main(fortran_filename, b_include_fortran=True):
     fortran_src = read_text_content(fortran_filename)
 

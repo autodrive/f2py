@@ -100,7 +100,7 @@ def replace_else_if(fortran_src):
     return after
 
 
-def replace_continue(fortran_src):
+def replace_continue(multi_line_fortran_src):
     # https://docs.python.org/2/howto/regex.html
     # http://stackoverflow.com/questions/6116978/python-replace-multiple-strings
 
@@ -108,7 +108,7 @@ def replace_continue(fortran_src):
     # 20 CONTINUE
     # match.group('label') == 20
 
-    after = r.sub(lambda m: '# end_for %s' % m.group('label'), fortran_src)
+    after = r.sub(lambda m: '# end_for %s' % m.group('label'), multi_line_fortran_src)
 
     # print(after)
 

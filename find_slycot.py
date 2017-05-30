@@ -7,6 +7,8 @@ import os
 import re
 from pprint import pprint
 
+import fortran_info
+
 
 def pwd():
     """
@@ -81,6 +83,8 @@ class RecursiveFinder(object):
         abs_initial_path = os.path.abspath(initial_path)
         self.b_rel_path = b_rel_path
 
+        self.ignore_if_folder_parts_include = ('.git', '.idea', 'build', 'f2py')
+
         if not os.path.exists(abs_initial_path):
             raise IOError('File does not exist: %s' % abs_initial_path)
         elif not os.path.isdir(abs_initial_path):
@@ -94,19 +98,21 @@ class RecursiveFinder(object):
         """destructor"""
         os.chdir(self.abs_return_path)
 
+    def is_path_to_ignore(self, path):
+        path_parts = path.split(os.sep)
+        check_list = map(lambda folder_part_to_ignore: folder_part_to_ignore in path_parts,
+                         self.ignore_if_folder_parts_include)
+        return any(check_list)
+
     def walker(self):
-        for root, dirs, files in os.walk(self.abs_initial_path):
-            # TODO : list of folders to ignore
-            if ('.git' not in root) \
-                    and ('.idea' not in root)\
-                    and ('\\build\\' not in root)\
-                    and ('slycot_conversion' not in root):
-                folder_list = self.process_folder(root, files)
+        for path, dirs, files in os.walk(self.abs_initial_path):
+            if not self.is_path_to_ignore(path):
+                folder_list = self.process_folder(path, files)
                 if folder_list:
                     if self.b_rel_path:
-                        key = os.path.relpath(root, self.abs_initial_path)
+                        key = os.path.relpath(path, self.abs_initial_path)
                     else:
-                        key = root
+                        key = path
                     self.result[key] = folder_list
 
     def process_folder(self, root, files):
@@ -128,9 +134,12 @@ class RecursiveFinder(object):
         result = []
 
         if os.path.splitext(file_name)[-1] == self.extension:
-            f = open(file_name, 'r')
-            txt = f.read()
-            f.close()
+            try:
+                with open(file_name, 'r') as f:
+                    txt = f.read()
+            except UnicodeDecodeError:
+                with open(file_name, 'r', encoding='utf-8') as f:
+                    txt = f.read()
 
             lines = txt.splitlines()
 
@@ -145,7 +154,12 @@ class RecursiveFinder(object):
 
 class RecursiveFinderFortran(RecursiveFinder):
     def __init__(self, initial_path=get_first_script_parameter(), extension='.f', pattern="CALL", function_list=None):
-        self.function_list = function_list
+
+        if function_list is None:
+            self.function_list = []
+        else:
+            self.function_list = function_list
+
         RecursiveFinder.__init__(self, initial_path=initial_path, extension=extension, pattern=pattern)
 
     def process_file(self, path, file_name):
@@ -164,7 +178,8 @@ class RecursiveFinderFortran(RecursiveFinder):
 
         function_name = os.path.splitext(file_name)[0].lower()
 
-        if function_name in self.function_list:
+        # if self.function_list is empty or function_name is in self.function_list
+        if (not self.function_list) or (function_name in self.function_list):
             result = RecursiveFinder.process_file(self, path=path, file_name=file_name)
 
         return result
@@ -260,7 +275,7 @@ class FindFunctionUsedFortran(FindFunctionNamesFromImport):
         -------
 
         """
-        return 'C' == line[1 - 1]
+        return fortran_info.is_comment(line)
 
     def handle_file(self, filename, line, line_number, path):
         """
@@ -305,12 +320,16 @@ def main():
     python_function_finder = FindFunctionNamesFromImport(python_finder.result)
     function_names = python_function_finder.find_function_names()
 
+    function_tuple = tuple(function_names.keys())
+
     print("imported ".ljust(60, '#'))
     pprint(function_names)
     print("end imported ".ljust(60, '*'))
 
     # from fortran CALL lines, find selected fortran function names
-    fortran_finder = RecursiveFinderFortran(function_list=tuple(function_names.keys()))
+    # find go to lines from Fortran source codes recursively visiting sub-folders
+
+    fortran_finder = RecursiveFinderFortran(function_list=function_tuple, pattern='CALL')
 
     fortran_function_finder = FindFunctionUsedFortran(fortran_finder.result, function_names)
     fortran_function_names = fortran_function_finder.find_function_names()
@@ -319,20 +338,10 @@ def main():
     print("end called ".ljust(60, '*'))
 
     # find go to lines from Fortran source codes recursively visiting sub-folders
-    fortran_go_to = RecursiveFinderFortran(function_list=tuple(function_names.keys()), pattern='GO')
+    fortran_go_to_set = find_in_tree(function_tuple, 'GO')
 
-    print("with go to ".ljust(60, '#'))
-    pprint(fortran_go_to.result)
-    fortran_go_to_set = set(fortran_go_to.result.values()[0].keys())
-    print("end with go to ".ljust(60, '*'))
-
-    # find go to lines from Fortran source codes recursively visiting sub-folders
-    fortran_goto = RecursiveFinderFortran(function_list=tuple(function_names.keys()), pattern='GOTO')
-
-    print("with goto ".ljust(60, '#'))
-    pprint(fortran_goto.result)
-    fortran_goto_set = set(fortran_goto.result.values()[0].keys())
-    print("end with goto ".ljust(60, '*'))
+    # find goto lines from Fortran source codes recursively visiting sub-folders
+    fortran_goto_set = find_in_tree(function_tuple, 'GOTO')
 
     fortran_go_to_set.union(fortran_goto_set)
     print("with go to or goto ".ljust(60, '#'))
@@ -340,6 +349,28 @@ def main():
     for function_name in sorted(list(fortran_go_to_set)):
         print(function_name.lower()[:-2])
     print("end go to or goto ".ljust(60, '*'))
+
+    # find goto lines from Fortran source codes recursively visiting sub-folders
+    find_in_tree(None, '\t')
+
+    # find goto lines from Fortran source codes recursively visiting sub-folders
+    find_in_tree(None, '[')
+
+
+def find_in_tree(function_tuple, pattern_string):
+    fortran_go_to = RecursiveFinderFortran(function_list=function_tuple, pattern=pattern_string)
+    print(("with %r " % pattern_string).ljust(60, '#'))
+
+    if fortran_go_to.result.values():
+        pprint(fortran_go_to.result)
+        fortran_go_to_set = set(fortran_go_to.result.values()[0].keys())
+    else:
+        print('%r not found' % pattern_string)
+        fortran_go_to_set = set()
+
+    print(("end with %r to " % pattern_string).ljust(60, '*'))
+    return fortran_go_to_set
+
 
 if __name__ == '__main__':
     main()

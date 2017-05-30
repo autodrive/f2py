@@ -248,9 +248,10 @@ def main(fortran_filename, b_include_fortran=True):
 
     # end if, else if
     fortran_src_keywords_replaced = replace_two_word_keywords(fortran_src_symbol_replaced)
+    del fortran_src_symbol_replaced
 
     fortran_lines = fortran_src_keywords_replaced.splitlines()
-    del fortran_src_symbol_replaced
+    del fortran_src_keywords_replaced
 
     python_lines = []
 
@@ -273,6 +274,9 @@ def main(fortran_filename, b_include_fortran=True):
             if b_include_fortran:
                 python_lines.append('#' + fortran_line_str)
             python_lines.append(python_line)
+
+    del fortran_lines[:]
+    del fortran_lines
 
     decide_indent_level(python_lines)
 

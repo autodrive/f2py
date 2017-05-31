@@ -35,10 +35,9 @@ def write_python_lines(python_filename, python_lines):
     :type python_lines:list, tuple
     :rtype: None
     """
-    f = open(python_filename, 'wt')
-    for python_line in python_lines:
-        f.write('%s\n' % python_line)
-    f.close()
+    with open(python_filename, 'wt') as f:
+        for python_line in python_lines:
+            f.write('%s\n' % python_line)
 
 
 def replace_logical_operators(fortran_src):

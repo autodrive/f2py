@@ -235,7 +235,7 @@ def decide_indent_level(python_line_list_split, tab_stop=4):
             line_list.insert(0, format_string % indent)
 
 
-def f2py(b_include_fortran, fortran_src):
+def f2py(fortran_src, b_include_fortran=True):
     # >, <, ==, !=, ...
     fortran_src_logic_replaced = replace_logical_operators(fortran_src)
     del fortran_src
@@ -256,22 +256,27 @@ def f2py(b_include_fortran, fortran_src):
     # line loop
     for k, fortran_line in enumerate(fortran_lines):
         fortran_line_str = str(fortran_line)
+
         if fortran_info.is_comment(fortran_line_str):
             # mark comment lines
-            python_line = '#' + fortran_line_str[1:]
-            python_line_undo = undo_replace_symbol(python_line)
-            del python_line
-            python_lines.append(python_line_undo)
+            python_line_00 = '#' + fortran_line_str[1:]
+            # if comment, undo adding spaces around '(' & ')'.
+            python_line = undo_replace_symbol(python_line_00)
+            del python_line_00
         else:
-            # if 6th column is not white space
+
             if fortran_info.is_continue_previous_line(fortran_line_str):
+                # merge continuing lines
                 last_line = python_lines.pop()
                 python_line = last_line + split_symbols(fortran_line_str)
             else:
+                # split around '(', ')', ',', ...
                 python_line = split_symbols(fortran_line_str)
+
             if b_include_fortran:
                 python_lines.append('#' + fortran_line_str)
-            python_lines.append(python_line)
+
+        python_lines.append(python_line)
 
     del fortran_lines[:]
     del fortran_lines
@@ -283,7 +288,7 @@ def f2py(b_include_fortran, fortran_src):
 def main(fortran_filename, b_include_fortran=True):
     fortran_src = read_text_content(fortran_filename)
 
-    python_lines = f2py(b_include_fortran, fortran_src)
+    python_lines = f2py(fortran_src, b_include_fortran=b_include_fortran)
 
     # write file
     python_filename = fortran_filename_to_python_filename(fortran_filename)

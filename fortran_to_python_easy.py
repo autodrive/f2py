@@ -235,9 +235,7 @@ def decide_indent_level(python_line_list_split, tab_stop=4):
             line_list.insert(0, format_string % indent)
 
 
-def main(fortran_filename, b_include_fortran=True):
-    fortran_src = read_text_content(fortran_filename)
-
+def f2py(b_include_fortran, fortran_src):
     # >, <, ==, !=, ...
     fortran_src_logic_replaced = replace_logical_operators(fortran_src)
     del fortran_src
@@ -279,6 +277,13 @@ def main(fortran_filename, b_include_fortran=True):
     del fortran_lines
 
     decide_indent_level(python_lines)
+    return python_lines
+
+
+def main(fortran_filename, b_include_fortran=True):
+    fortran_src = read_text_content(fortran_filename)
+
+    python_lines = f2py(b_include_fortran, fortran_src)
 
     # write file
     python_filename = fortran_filename_to_python_filename(fortran_filename)

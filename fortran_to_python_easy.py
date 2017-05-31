@@ -27,7 +27,7 @@ def fortran_filename_to_python_filename(fortran_filename):
     return ''.join((os.path.splitext(fortran_filename)[0].lower(), '.py'))
 
 
-def write_python_file(python_filename, python_lines):
+def write_python_lines(python_filename, python_lines):
     """
     write a list of python script lines into a text file
 
@@ -292,7 +292,7 @@ def main(fortran_filename, b_include_fortran=True):
 
     # write file
     python_filename = fortran_filename_to_python_filename(fortran_filename)
-    write_python_file(python_filename, python_lines)
+    write_python_lines(python_filename, python_lines)
 
 
 def split_symbols(fortran_line):

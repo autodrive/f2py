@@ -7,6 +7,7 @@ import re
 import fortran_info
 import wapj_logger
 
+# initialize logger
 logger = wapj_logger.initialize_logger('f2py_easy.log')
 
 

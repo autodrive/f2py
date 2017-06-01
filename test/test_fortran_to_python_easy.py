@@ -1743,6 +1743,22 @@ C
 
         self.assertSequenceEqual(expected_list, python_list)
 
+    def test_replace_loop_sep(self):
+        input_src = '\n'.join(['IF IA.EQ.IB THEN',
+                               '    IC = 1',
+                               'ELSE IF IA.GT.IB THEN',
+                               '    IC = 2'])
+
+        input_tuple = (('.EQ.', '=='), ('.GT.', '>'),)
+
+        result_src = f2pe.replace_loop_sep(input_src, input_tuple, separator='@o@')
+
+        expected_src = '\n'.join(['IF IA@o@==@o@IB THEN',
+                                  '    IC = 1',
+                                  'ELSE IF IA@o@>@o@IB THEN',
+                                  '    IC = 2'])
+        self.assertEqual(expected_src, result_src)
+
 
 if __name__ == '__main__':
     unittest.main()

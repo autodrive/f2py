@@ -60,7 +60,7 @@ def replace_logical_operators(fortran_src):
         ('.NOT.', 'not'),
     )
 
-    return replace_loop(fortran_src, logical_operators, ' ')
+    return replace_loop_sep(fortran_src, logical_operators, ' ')
 
 
 def replace_symbol(fortran_src):
@@ -80,7 +80,7 @@ def replace_symbol(fortran_src):
         (')', ')'),
     )
 
-    return replace_loop(fortran_src, logical_operators, ' ')
+    return replace_loop_sep(fortran_src, logical_operators, ' ')
 
 
 def replace_else_if(fortran_src):
@@ -141,10 +141,10 @@ def undo_replace_symbol(fortran_src):
         (' ) ', ')'),
     )
 
-    return replace_loop(fortran_src, logical_operators)
+    return replace_loop_sep(fortran_src, logical_operators)
 
 
-def replace_loop(fortran_src, pairs, separator=''):
+def replace_loop_sep(fortran_src, pairs, separator=''):
     """
 
     :param str fortran_src:
